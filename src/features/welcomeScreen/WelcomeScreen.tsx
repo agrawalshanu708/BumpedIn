@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-// import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
 import { Button, Heading } from 'native-base';
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
-import { ROUTES } from 'routes/Routes';
+import { ROUTES } from './../../routes/Routes';
 
 export const SIZE = {
     XS: 'xs',
@@ -24,34 +24,34 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
     const [userData, setUserData] = useState<any>()
     const webClientId = `813451232123-lf4oce7kc1ttcvvovm4cs78jpqtfao6l.apps.googleusercontent.com`
 
-    // useEffect(() => {
-    //     GoogleSignin.configure()
-    // }, [])
+    useEffect(() => {
+        GoogleSignin.configure()
+    }, [])
 
 
-    // const googleLogin = async () => {
-    //     console.log('google sigin start')
-    //     try {
-    //         await GoogleSignin.hasPlayServices();
-    //         const userInfo = await GoogleSignin.signIn();
-    //         console.log("userinfo", userInfo);
+    const handleGoogleSignin = async () => {
+        console.log('google sigin start')
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log("userinfo", userInfo);
 
-    //     } catch (error: any) {
-    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //             console.log(error)
-    //         } else if (error.code === statusCodes.IN_PROGRESS) {
-    //             console.log(error)
-    //         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //             console.log(error)
-    //         } else {
-    //         }
-    //     }
-    // };
+        } catch (error: any) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                console.log(error)
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                console.log(error)
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                console.log(error)
+            } else {
+            }
+        }
+    };
 
 
     const onPressHandler = useCallback(() => {
-        // handleGoogleSignin()
-        navigation.navigate(ROUTES.LOGIN_ERROR.name)
+        handleGoogleSignin()
+        // navigation.navigate(ROUTES.LOGIN_ERROR.name)
     }, [])
 
     const getHeaderView = () => (
@@ -66,7 +66,7 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
     );
 
     const getActionView = () => (
-        <Button style={styles.ContinueCta}>{WELCOME_SCREEN_STATICS.CTA.name}</Button>
+        <Button onPress={onPressHandler} style={styles.ContinueCta}>{WELCOME_SCREEN_STATICS.CTA.name}</Button>
     );
 
     return (
