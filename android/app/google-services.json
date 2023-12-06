@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "722180858444",
+    "project_id": "bumpedin-8bcea",
+    "storage_bucket": "bumpedin-8bcea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722180858444:android:dbf7d0b65324af13144ae9",
+        "android_client_info": {
+          "package_name": "com.bumpedin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722180858444-tcq97im3otnhojufqhffvjh5j6lplq84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4_xe7peUu4kYscOelH3lBDLLey8vFKQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722180858444-tcq97im3otnhojufqhffvjh5j6lplq84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
