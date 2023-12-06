@@ -50,8 +50,8 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
 
 
     const onPressHandler = useCallback(() => {
-        handleGoogleSignin()
-        // navigation.navigate(ROUTES.LOGIN_ERROR.name)
+        // handleGoogleSignin()
+        navigation.navigate(ROUTES.LOGIN_ERROR.name)
     }, [])
 
     const getHeaderView = () => (
