@@ -45,24 +45,24 @@ const UseConnectProvider = ({ children }) => {
     const [ignoreConnectionLoadingStatus, setIgnoreConnectionLoadingStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
 
     const getNearByUsers = useCallback(
-        () => new Promise((resolve, reject) => {
+        (location) => new Promise((resolve, reject) => {
             if (isLoadingOrCompletedOrFailed(loadingStatus)) {
                 return;
             }
-            apiGet(API_URLS.CONNECT.GET_NEARBY_USERS).then((response: any) => {
-                setTimeout(() => {
+            setTimeout(() => {
+                apiPost(API_URLS.CONNECT.GET_NEARBY_USERS, {}, {}, location).then((response: any) => {
                     setNearByUsers(response?.data)
                     setLoadingStatus(LOADING_STATUS.COMPLETED)
                     resolve(response)
-                }, 1000)
-            }).catch((e: any) => {
-                console.error(
-                    'Error in fetching get nearby data', e
-                )
-                setLoadingStatus(LOADING_STATUS.FAILED)
-                reject(e)
-            })
-        }, [apiGet, loadingStatus, nearByUsers]))
+                }).catch((e: any) => {
+                    console.error(
+                        'Error in fetching get nearby data', e
+                    )
+                    setLoadingStatus(LOADING_STATUS.FAILED)
+                    reject(e)
+                })
+            }, 1000)
+        }, [apiPost, loadingStatus, nearByUsers]))
 
     const getTotalUsers = useCallback(
         () => {
@@ -81,12 +81,12 @@ const UseConnectProvider = ({ children }) => {
         }, [apiGet, totalUsersLoadingStatus, totalUsers])
 
 
-    const sendConnectionRequest = useCallback(() => new Promise((resolve, reject) => {
+    const sendConnectionRequest = useCallback((profileData: any) => new Promise((resolve, reject) => {
         if (isLoading(sendConnectionLoadingStatus)) {
             return;
         }
         setSendConnectionLoadingStatus(LOADING_STATUS.LOADING)
-        apiPost(API_URLS.CONNECT.SEND_REQUEST, {}, {}, {}).then((response: any) => {
+        apiPost(API_URLS.CONNECT.SEND_REQUEST, {}, {}, profileData).then((response: any) => {
             setSendConnectionLoadingStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
         }).catch((error: any) => {
@@ -96,12 +96,12 @@ const UseConnectProvider = ({ children }) => {
         })
     }), [apiPost, sendConnectionLoadingStatus])
 
-    const sendIgnoreRequest = useCallback(() => new Promise((resolve, reject) => {
+    const sendIgnoreRequest = useCallback((profileData: any) => new Promise((resolve, reject) => {
         if (isLoading(ignoreConnectionLoadingStatus)) {
             return;
         }
-        setIgnoreConnectionLoadingStatus(LOADING_STATUS.LOADING)
-        apiPost(API_URLS.CONNECT.IGNORE_CONNECT, {}, {}, {}).then((response: any) => {
+        setIgnoreConnectionLoadingStatus(LOADING_STATUS.LOADING);
+        apiPost(API_URLS.CONNECT.IGNORE_CONNECT, {}, {}, profileData).then((response: any) => {
             setIgnoreConnectionLoadingStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
         }).catch((error: any) => {

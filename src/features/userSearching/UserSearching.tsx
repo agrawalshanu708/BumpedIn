@@ -3,17 +3,19 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Card, Heading } from 'native-base'
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
 import { ROUTES } from './../../routes/Routes'
-// import { useConnect } from '../../hooks/useConnect'
+import { useConnect } from '../../hooks/useConnect'
 
 const UserSearching = ({ navigation }: { navigation: any }) => {
 
-    // const { getNearByUsers, nearByUsers } = useConnect
+    const { getNearByUsers, nearByUsers } = useConnect
 
-    const [isUserFound, setIsUserFound] = useState(true)
+    const [isUserNotFoundContentSHown, setIsUserNotFoundContentSHown] = useState(false)
+
+    const location = { longitude: 11, latitude: 10 }
 
     // useEffect(() => {
-    //     getNearByUsers().then((res: any) => {
-    //         res.data.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserFound(false)
+    //     getNearByUsers(location).then((res: any) => {
+    //         res.data.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserNotFoundContentSHown(true)
     //     }).catch((err: any) => {
     //         console.error(err)
     //     })
@@ -32,7 +34,7 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
     )
 
     const getNoUserFoundContentView = () => (
-        !isUserFound && (
+        isUserNotFoundContentSHown && (
             <View style={styles.noUserFoundContentContainer}>
                 <Text style={styles.alumsCountText}>{USER_SEARCHING_STATICS.ALUMS_COUNT_TEXT}</Text>
                 <Text style={styles.NoUserFoundText}>{USER_SEARCHING_STATICS.NO_FOUND_USER_TEXT}</Text>

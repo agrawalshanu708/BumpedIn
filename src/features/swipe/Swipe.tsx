@@ -4,36 +4,47 @@ import { Button, Heading, CloseIcon, Text } from 'native-base'
 import { SWIPE_STATICS } from './SwipeStatics'
 import { ROUTES } from './../../routes/Routes';
 import ProfileCard from './../../components/profileCard/ProfileCard';
+import { useConnect } from '../../hooks/useConnect';
+
+const isLastProfileCard = (cardsArray, currentProfileData) => {
+    const lastIndex = cardsArray.length - 1;
+    const currentIndex = cardsArray.findIndex((data) => data.id === currentProfileData.id);
+    const isLastCard = currentIndex === lastIndex;
+    return [isLastCard, currentIndex]
+}
 
 
 const Swipe = ({ navigation }: { navigation: any }) => {
 
+    const { nearByUsers, sendIgnoreRequest, sendConnectionRequest } = useConnect()
+
     const [currentProfileData, setCurrentProfileData] = useState(SWIPE_STATICS.FOUND_USER_LIST[0])
+    const [isLastCard, currentIndex] = isLastProfileCard(SWIPE_STATICS.FOUND_USER_LIST, currentProfileData)
 
     const handleConnectPress = useCallback(() => {
-        const lastIndex = SWIPE_STATICS.FOUND_USER_LIST.length - 1;
-        const currentIndex = SWIPE_STATICS.FOUND_USER_LIST.findIndex((data) => data.id === currentProfileData.id);
-        const isLastProfile = currentIndex === lastIndex;
-
-        if (!isLastProfile) {
-            setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
-        } else {
-            navigation.navigate(ROUTES.SEARCHING_USER.name)
-        }
-
+        sendConnectionRequest(currentProfileData).then((response) => {
+            if (response.status === 'MATCH_SUCCESS') {
+                navigation.navigate(ROUTES.USER_MATCH.name)
+            } else if (!isLastCard) {
+                setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
+            } else {
+                navigation.navigate(ROUTES.SEARCHING_USER.name)
+            }
+        }).catch((error) => {
+            console.error('Error while connecting connection', error)
+        })
     }, [navigation, currentProfileData])
 
     const handleIgnorePress = useCallback(() => {
-        const lastIndex = SWIPE_STATICS.FOUND_USER_LIST.length - 1;
-        const currentIndex = SWIPE_STATICS.FOUND_USER_LIST.findIndex((data) => data.id === currentProfileData.id);
-        const isLastProfile = currentIndex === lastIndex;
-
-        if (!isLastProfile) {
-            setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
-        } else {
-            navigation.navigate(ROUTES.SEARCHING_USER.name)
-        }
-
+        sendIgnoreRequest(currentProfileData).then((response) => {
+            if (!isLastCard) {
+                setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
+            } else {
+                navigation.navigate(ROUTES.SEARCHING_USER.name)
+            }
+        }).catch((error) => {
+            console.error('Error while ignoring connection', error)
+        })
     }, [navigation, currentProfileData])
 
 
