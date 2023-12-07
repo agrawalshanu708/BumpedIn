@@ -16,7 +16,7 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const handlePress = useCallback(() => {
-        setModalVisible(true)
+        console.log('hey how r you')
         navigation.navigate(ROUTES.TAB_NAVIGATOR_ROOT.name)
     }, [modalVisible])
 

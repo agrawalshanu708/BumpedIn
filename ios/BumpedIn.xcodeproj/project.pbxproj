@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-BumpedIn-BumpedInTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-BumpedIn-BumpedInTests.a */; };
 		7B9A91392B20890C00276F3C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A91382B20890C00276F3C /* GoogleService-Info.plist */; };
+		7B9A913C2B21F5C000276F3C /* geoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A913B2B21F5C000276F3C /* geoLocation.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,8 @@
 		5B7EB9410499542E8C5724F5 /* Pods-BumpedIn-BumpedInTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BumpedIn-BumpedInTests.debug.xcconfig"; path = "Target Support Files/Pods-BumpedIn-BumpedInTests/Pods-BumpedIn-BumpedInTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-BumpedIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BumpedIn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B9A91382B20890C00276F3C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7B9A913A2B21F5C000276F3C /* BumpedIn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BumpedIn-Bridging-Header.h"; sourceTree = "<group>"; };
+		7B9A913B2B21F5C000276F3C /* geoLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geoLocation.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BumpedIn/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-BumpedIn-BumpedInTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BumpedIn-BumpedInTests.release.xcconfig"; path = "Target Support Files/Pods-BumpedIn-BumpedInTests/Pods-BumpedIn-BumpedInTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -95,6 +98,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				7B9A913B2B21F5C000276F3C /* geoLocation.swift */,
+				7B9A913A2B21F5C000276F3C /* BumpedIn-Bridging-Header.h */,
 			);
 			name = BumpedIn;
 			sourceTree = "<group>";
@@ -211,7 +216,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
@@ -431,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				7B9A913C2B21F5C000276F3C /* geoLocation.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +456,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-BumpedIn-BumpedInTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -477,6 +484,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-BumpedIn-BumpedInTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = BumpedInTests/Info.plist;
@@ -518,6 +526,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bumpedin;
 				PRODUCT_NAME = BumpedIn;
+				SWIFT_OBJC_BRIDGING_HEADER = "BumpedIn-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -544,6 +553,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bumpedin;
 				PRODUCT_NAME = BumpedIn;
+				SWIFT_OBJC_BRIDGING_HEADER = "BumpedIn-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
