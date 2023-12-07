@@ -15,6 +15,7 @@ const EditForm = ({ navigation }: { navigation: any }) => {
                 designation={formData.designation}
                 organization={formData.organization}
                 navigation={navigation}
+                editMode={true}
             />
         </View>
     )

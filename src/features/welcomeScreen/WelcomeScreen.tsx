@@ -1,6 +1,7 @@
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
+import axios from 'axios';
 
 import { Button, Heading } from 'native-base';
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
@@ -10,6 +11,7 @@ import { useApi } from '../../hooks/useApi';
 import { SIZE } from '../../enums';
 
 const WelcomeScreen = ({ navigation }: { navigation: any }) => {
+    const api = axios.create({})
 
     const { apiGet, apiPost } = useApi()
 
@@ -20,13 +22,12 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
         GoogleSignin.configure()
     }, [])
 
-
     const handleGoogleSignin = async () => {
         console.log('google sigin start')
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            const validUser = await apiPost(API_URLS.PROFESSIONAL_DATA.VERIFY_MAIL, {}, {}, userInfo)
+            const checkingUserIsValid = await api.post(API_URLS.PROFESSIONAL_DATA.VERIFY_MAIL, userInfo)
             await navigation.navigate(ROUTES.PROFILE_VIEW.name)
             console.log("userinfo", userInfo);
         } catch (error: any) {
@@ -42,7 +43,6 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
             }
         }
     };
-
 
     const onPressHandler = useCallback(() => {
         // handleGoogleSignin()
