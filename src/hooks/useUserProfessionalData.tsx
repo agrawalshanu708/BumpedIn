@@ -1,21 +1,9 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+
 import { useApi } from './useApi'
-import { API_URLS } from "services/apiUrls";
-
-
-enum LOADING_STATUS {
-    'NOT_YET_STARTED' = 0,
-    'LOADING' = 1,
-    'COMPLETED' = 2,
-    'FAILED' = 3,
-}
-
-
-const isLoadingOrCompletedOrFailed = (...args: LOADING_STATUS[]) => args.some((state: LOADING_STATUS) => state === LOADING_STATUS.LOADING || state === LOADING_STATUS.COMPLETED || state === LOADING_STATUS.FAILED)
-
-
-const isLoading = (...args: LOADING_STATUS[]) => args.some((state: LOADING_STATUS) => state === LOADING_STATUS.LOADING)
-
+import { API_URLS } from "../services/apiUrls";
+import { LOADING_STATUS } from "../enums";
+import { isLoading, isLoadingOrCompletedOrFailed } from "../utils";
 
 interface UseUserProfessionalDataType {
     onSubmit: () => Promise<any>
@@ -23,24 +11,22 @@ interface UseUserProfessionalDataType {
     onFormDataChange: () => void,
     UpdateProfessionalData: () => Promise<any>
     updateStatus: LOADING_STATUS,
+    formData: {},
 }
-
 
 const UseUserProfessionalDataContext = createContext<UseUserProfessionalDataType>({
     onSubmit: () => Promise.resolve({}),
     submitStatus: LOADING_STATUS.NOT_YET_STARTED,
     onFormDataChange: () => { },
     UpdateProfessionalData: () => Promise.resolve({}),
-    updateStatus: LOADING_STATUS.NOT_YET_STARTED
+    updateStatus: LOADING_STATUS.NOT_YET_STARTED,
+    formData: {},
 })
-
 
 const useUserProfessionalData = () => useContext(UseUserProfessionalDataContext);
 
-
 const UseUserProfessionDataProvider = ({ children }) => {
     const { apiGet, apiPost } = useApi()
-
 
     const [userProfessionalData, setUserProfessionalData] = useState({})
     const [loadingStatus, setLoadingStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
@@ -48,19 +34,18 @@ const UseUserProfessionDataProvider = ({ children }) => {
     const [updateStatus, setUpdateStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
     const [formData, setFormData] = useState<Record<string, string>>({})
 
-
     const onFormDataChange = useCallback((newFormData: any) => {
         setFormData((prevFormData: any) => ({ ...prevFormData, ...newFormData }))
     }, [formData])
 
-
     const onSubmit = useCallback(
-        () => new Promise((resolve, reject) => {
+        (newFormData) => new Promise((resolve, reject) => {
             if (isLoading(submitStatus)) {
                 return;
             }
+            setFormData(newFormData)
             setSubmitStatus(LOADING_STATUS.LOADING)
-            apiPost(API_URLS.PROFESSIONAL_DATA.SUBMIT, {}, {}, formData
+            apiPost(API_URLS.PROFESSIONAL_DATA.SUBMIT, {}, {}, newFormData
             ).then((response: any) => {
                 setSubmitStatus(LOADING_STATUS.COMPLETED)
                 resolve(response)
@@ -89,13 +74,13 @@ const UseUserProfessionDataProvider = ({ children }) => {
             })
         }, [apiGet, loadingStatus, userProfessionalData])
 
-
-    const UpdateProfessionalData = useCallback(() => new Promise((resolve, reject) => {
+    const UpdateProfessionalData = useCallback((newFormData) => new Promise((resolve, reject) => {
         if (isLoading(updateStatus)) {
             return;
         }
+        setFormData(newFormData);
         setUpdateStatus(LOADING_STATUS.LOADING)
-        apiPost(API_URLS.PROFESSIONAL_DATA.UPDATE, {}, {}, formData).then((response: any) => {
+        apiPost(API_URLS.PROFESSIONAL_DATA.UPDATE, {}, {}, newFormData).then((response: any) => {
             setUpdateStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
         }).catch((error: any) => {
@@ -105,7 +90,6 @@ const UseUserProfessionDataProvider = ({ children }) => {
         })
     }), [apiPost, updateStatus, setUpdateStatus])
 
-
     const contextValue = useMemo(
         () => ({
             onSubmit,
@@ -113,19 +97,23 @@ const UseUserProfessionDataProvider = ({ children }) => {
             submitStatus,
             onFormDataChange,
             UpdateProfessionalData,
-            updateStatus
-
-
-        }), [onSubmit, getUserProfessionalData, submitStatus, onFormDataChange, UpdateProfessionalData, updateStatus])
-
-
+            updateStatus,
+            formData
+        }), [
+        onSubmit,
+        getUserProfessionalData,
+        submitStatus,
+        onFormDataChange,
+        UpdateProfessionalData,
+        updateStatus,
+        formData
+    ])
     return (
         <UseUserProfessionDataProvider value={contextValue}>
             {children}
         </UseUserProfessionDataProvider>
     )
 }
-
 
 export {
     useUserProfessionalData,

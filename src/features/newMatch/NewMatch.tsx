@@ -1,39 +1,54 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useCallback } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { NEW_MATCH_STATICS } from './NewMatchStatics'
-import { Button, Heading } from 'native-base'
+import { NEW_MATCH_STATICS } from './NewMatchStatics';
+import { Button, Heading } from 'native-base';
+import { ROUTES } from '../../routes/Routes';
 
-const NewMatch = () => {
+const NewMatch = ({ navigation }: { navigation: any }) => {
+
+    const handleChatPress = useCallback(() => {
+        navigation.navigate(ROUTES.MESSAGE_STACK.name, { screen: ROUTES.CHAT_SCREEN.name })
+    }, [navigation])
+
+    const handleLaterPress = useCallback(() => {
+        navigation.navigate(ROUTES.CONNECT_STACK.name, { screen: ROUTES.SWIPE_USER.name })
+    }, [navigation])
 
     const getContentView = () => (
         <View style={styles.contentContainer}>
             <Heading style={styles.heading}>{NEW_MATCH_STATICS.HEADING}</Heading>
-            <Heading style={styles.subHeading}>{NEW_MATCH_STATICS.SUBHEADING}</Heading>
-            <Button style={styles.sendMessageCta}>{NEW_MATCH_STATICS.cta.name}</Button>
+            <Heading style={styles.subHeading}>
+                {NEW_MATCH_STATICS.SUBHEADING}
+            </Heading>
+            <Button onPress={handleChatPress} style={styles.sendMessageCta}>
+                {NEW_MATCH_STATICS.cta.name}
+            </Button>
             <Text style={styles.expiredText}>{NEW_MATCH_STATICS.EXPIRED_TEXT}</Text>
         </View>
-    )
+    );
 
     const getFooterView = () => (
         <View style={styles.footerContainer}>
-            <Button style={styles.laterCta} variant="ghost">{NEW_MATCH_STATICS.FOOTER.cta.name}</Button>
+            <Button onPress={handleLaterPress} style={styles.laterCta} variant="ghost">
+                {NEW_MATCH_STATICS.FOOTER.cta.name}
+            </Button>
         </View>
-    )
+    );
 
     return (
         <View style={styles.container}>
             {getContentView()}
             {getFooterView()}
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 36,
-        paddingVertical: 36,
-        flex: 1
+        paddingHorizontal: 24,
+        paddingVertical: 24,
+        flex: 1,
     },
     contentContainer: {
         flex: 1,
@@ -55,8 +70,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     laterCta: {
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
-})
+});
 
-export default NewMatch
+export default NewMatch;

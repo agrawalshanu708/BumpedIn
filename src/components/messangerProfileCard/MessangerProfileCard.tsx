@@ -1,8 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { CircleIcon } from 'native-base'
+import React, { useCallback } from 'react'
+import { CircleIcon, Button } from 'native-base'
+import { ROUTES } from './../../routes/Routes'
 
-const MessangerProfileCard = () => {
+const MessangerProfileCard = ({ navigation }: { navigation: any }) => {
+
+    const handleChatPress = useCallback(() => {
+        navigation.navigate(ROUTES.CHAT_SCREEN.name)
+    }, [navigation])
 
     const getNameView = () => (
         <Text>Shanu Agrawal</Text>
@@ -36,13 +41,13 @@ const MessangerProfileCard = () => {
     )
 
     return (
-        <View style={styles.container}>
+        <Button onPress={handleChatPress} style={styles.container}>
             {getContentView()}
             {getMessageTime()}
             {getOnlineStatus()}
-        </View>
+        </Button>
     )
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -57,6 +62,6 @@ const styles = StyleSheet.create({
     messageTimeText: {
         justifyContent: 'center',
     }
-})
+});
 
-export default MessangerProfileCard
+export default MessangerProfileCard;

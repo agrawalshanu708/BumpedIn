@@ -1,25 +1,19 @@
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
 
 import { Button, Heading } from 'native-base';
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
 import { ROUTES } from './../../routes/Routes';
-
-export const SIZE = {
-    XS: 'xs',
-    SM: 'sm',
-    MD: 'md',
-    LG: 'lg',
-    XL: 'xl',
-    '2XL': '2xl',
-    '3XL': '3xl',
-    '4XL': '4xl',
-    '5XL': '5xl',
-    '6XL': '6xl',
-};
+import { API_URLS } from '../../services/apiUrls';
+import { useApi } from '../../hooks/useApi';
+import { SIZE } from '../../enums';
 
 const WelcomeScreen = ({ navigation }: { navigation: any }) => {
+    const api = axios.create({})
+
+    const { apiGet, apiPost } = useApi()
 
     const [userData, setUserData] = useState<any>()
     const webClientId = `813451232123-lf4oce7kc1ttcvvovm4cs78jpqtfao6l.apps.googleusercontent.com`
@@ -28,30 +22,31 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
         GoogleSignin.configure()
     }, [])
 
-
     const handleGoogleSignin = async () => {
         console.log('google sigin start')
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
+            const checkingUserIsValid = await api.post(API_URLS.PROFESSIONAL_DATA.VERIFY_MAIL, userInfo)
+            await navigation.navigate(ROUTES.PROFILE_VIEW.name)
             console.log("userinfo", userInfo);
-
         } catch (error: any) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 console.log(error)
+                navigation.navigate(ROUTES.LOGIN_ERROR.name)
             } else if (error.code === statusCodes.IN_PROGRESS) {
                 console.log(error)
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
                 console.log(error)
+                navigation.navigate(ROUTES.LOGIN_ERROR.name)
             } else {
             }
         }
     };
 
-
     const onPressHandler = useCallback(() => {
         // handleGoogleSignin()
-        navigation.navigate(ROUTES.LOGIN_ERROR.name)
+        navigation.navigate(ROUTES.FORM.name)
     }, [])
 
     const getHeaderView = () => (

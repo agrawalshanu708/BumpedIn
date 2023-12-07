@@ -1,59 +1,18 @@
 import React, { useCallback, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { Button, Heading, Modal } from 'native-base'
 import { PROFILE_INFO_STATICS } from './ProfileInfoStatics'
 import { ROUTES } from './../../routes/Routes'
-
-const ProfileCard = () => {
-
-    const getNameView = () => (
-        <View>
-            <Heading style={styles2.firstNameText}>Shanu</Heading>
-            <Heading style={styles2.lastNameText}>Agrawal</Heading>
-        </View>
-    )
-
-    const getBatchContentView = () => (
-        <Text style={styles2.batchText}>ISB PGP CLASS OF 2009</Text>
-    )
-
-    const getDesignationView = () => (
-        <View style={styles2.designationContainer}>
-            <Heading>Chief Expendable officer</Heading>
-            <Heading>Bankrupt Unicorn, Inc.</Heading>
-        </View>
-    )
-
-    return (
-        <View style={styles2.container}>
-            {getNameView()}
-            {getBatchContentView()}
-            {getDesignationView()}
-        </View>
-    )
-}
-
-const styles2 = StyleSheet.create({
-    container: {
-        backgroundColor: '#E0F4FF',
-        paddingTop: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingBottom: 100,
-    },
-    firstNameText: {},
-    lastNameText: {},
-    batchText: {
-        marginTop: 20
-    },
-    designationContainer: {
-        marginTop: 20,
-    },
-
-})
+import { useUserProfessionalData } from '../../hooks/useUserProfessionalData'
+import ProfileCard from '../../components/profileCard/ProfileCard';
 
 const ProfileInfo = ({ navigation }: { navigation: any }) => {
+
+    const { formData } = useUserProfessionalData()
+
+    console.log('formData', formData)
+
     const [modalVisible, setModalVisible] = useState(false);
 
     const handlePress = useCallback(() => {
@@ -70,7 +29,16 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
 
     const getCardView = () => (
         <View style={styles.cardWrapper}>
-            <ProfileCard />
+            <ProfileCard
+                firstName={'shanu'}
+                lastName={'Agrawal'}
+                batch={2009}
+                designation={'software developer'}
+                organization={'Evive sofwatare analytics'}
+                course={'PGP'}
+                college={'ISB'}
+                navigation={navigation}
+            />
         </View>
     )
 
@@ -81,18 +49,11 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
         </View>
     )
 
-    const getModalView = () => (
-        <View>
-            <Text>hello</Text>
-        </View>
-    )
-
     return (
         <View style={styles.container}>
             {getHeaderView()}
             {getCardView()}
             {getFooterView()}
-            {getModalView()}
         </View>
     )
 }
@@ -101,21 +62,22 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 36,
         paddingVertical: 36,
+        flex: 1,
     },
-    headerContainer: {},
+    headerContainer: {
+    },
     heading: {},
     subHeading: {
-        marginTop: 12,
+        marginTop: 18,
     },
     cardWrapper: {
-        marginTop: 36
+        flex: 1,
+        justifyContent: 'center',
     },
-    footerContainer: {
-        marginTop: 36
-    },
+    footerContainer: {},
     footerText: {},
     aroundCta: {
-        marginTop: 12,
+        marginTop: 18,
     },
 })
 

@@ -1,65 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useCallback } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Button } from 'native-base'
+
 import { ACCOUNT_STATICS } from './AccountStatics'
-import { Button, Heading } from 'native-base'
-import { ROUTES } from './../../routes/Routes'
-
-const ProfileCard = () => {
-
-    const getNameView = () => (
-        <View>
-            <Heading style={styles2.firstNameText}>Shanu</Heading>
-            <Heading style={styles2.lastNameText}>Agrawal</Heading>
-        </View>
-    )
-
-    const getBatchContentView = () => (
-        <Text style={styles2.batchText}>ISB PGP CLASS OF 2009</Text>
-    )
-
-    const getDesignationView = () => (
-        <View style={styles2.designationContainer}>
-            <Heading>Chief Expendable officer</Heading>
-            <Heading>Bankrupt Unicorn, Inc.</Heading>
-        </View>
-    )
-
-    return (
-        <View style={styles2.container}>
-            {getNameView()}
-            {getBatchContentView()}
-            {getDesignationView()}
-        </View>
-    )
-}
-
-const styles2 = StyleSheet.create({
-    container: {
-        backgroundColor: '#E0F4FF',
-        paddingTop: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingBottom: 100,
-    },
-    firstNameText: {},
-    lastNameText: {},
-    batchText: {
-        marginTop: 20
-    },
-    designationContainer: {
-        marginTop: 20,
-    },
-
-})
+import ProfileCard from '../../components/profileCard/ProfileCard';
 
 const Accounts = ({ navigation }: { navigation: any }) => {
 
     const handlePress = useCallback(() => {
-        navigation.navigate(ROUTES.EDIT_FORM.name)
-    }, [navigation])
+        //signout
+    }, [])
 
     const getProfileCard = () => (
-        <ProfileCard />
+        <ProfileCard
+            firstName={'shanu'}
+            lastName={'Agrawal'}
+            batch={2009}
+            designation={'software developer'}
+            organization={'Evive software analytics'}
+            course={'PGP'}
+            college={'ISB'}
+            editCta={true}
+            navigation={navigation}
+        />
     )
 
     const getContentView = () => (
@@ -84,21 +47,22 @@ const Accounts = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 36,
-        paddingVertical: 36,
+        paddingHorizontal: 24,
+        paddingVertical: 24,
+        flex: 1,
     },
     contentContainer: {
-        marginTop: 36
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     contentText: {},
     signoutCta: {
         marginTop: 12
     },
     footerText: {
-        marginTop: 36,
         textAlign: 'center',
     },
-
 })
 
-export default Accounts
+export default Accounts;
