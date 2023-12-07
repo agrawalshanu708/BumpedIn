@@ -1,6 +1,7 @@
 export const API_URLS = {
   AUTH: {},
   PROFESSIONAL_DATA: {
+    VERIFY_MAIL: '',
     GET: '',
     SUBMIT: '',
     UPDATE: '',

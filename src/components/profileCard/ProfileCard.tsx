@@ -1,34 +1,34 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Heading } from 'native-base';
+import React, { useCallback } from 'react';
+import { Button, Heading } from 'native-base';
+import { ROUTES } from '../../routes/Routes';
 
 const ProfileCard = (props: any) => {
 
-    const { firstName, lastName, designation, organization, batch, course, college } = props
+    const { firstName, lastName, designation, organization, batch, course, college, editCta = false, navigation } = props
 
-    const getNameView = () => (
-        <View>
+    const handleEditPress = useCallback(() => {
+        navigation.navigate(ROUTES.ACCOUNT_STACK.name, { screen: ROUTES.EDIT_USER_DETAILS.name })
+    }, [navigation])
+
+    const getContentView = () => (
+        <View style={styles.contentContainer}>
             <Heading style={styles.firstNameText}>{firstName}</Heading>
             <Heading style={styles.lastNameText}>{lastName}</Heading>
+            <Text style={styles.batchText}>{college} ${course} CLASS OF ${batch}</Text>
+            <Heading style={styles.designationText}>{designation}</Heading>
+            <Heading style={styles.organisationText}>{organization}</Heading>
         </View>
     )
 
-    const getBatchContentView = () => (
-        <Text style={styles.batchText}>`${college} ${course} CLASS OF ${batch}`</Text>
-    )
-
-    const getDesignationView = () => (
-        <View style={styles.designationContainer}>
-            <Heading>{designation}</Heading>
-            <Heading>{organization}</Heading>
-        </View>
+    const getActionView = () => (
+        editCta && <Button onPress={handleEditPress} style={styles.editCta} >Edit</Button>
     )
 
     return (
         <View style={styles.container}>
-            {getNameView()}
-            {getBatchContentView()}
-            {getDesignationView()}
+            {getContentView()}
+            {getActionView()}
         </View>
     )
 }
@@ -36,23 +36,25 @@ const ProfileCard = (props: any) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#E0F4FF',
-        paddingTop: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingBottom: 100,
+        paddingHorizontal: 30,
+        paddingVertical: 30,
     },
-    firstNameText: {
-        // marginTop: 96
-    },
+    contentContainer: {},
+    firstNameText: {},
     lastNameText: {},
     batchText: {
         marginTop: 20
     },
-    designationContainer: {
+    designationText: {
         marginTop: 20,
-        marginBottom: 96
     },
-
+    organisationText: {
+        marginTop: 6
+    },
+    editCta: {
+        alignSelf: 'flex-end',
+        marginTop: 12
+    }
 })
 
 export default ProfileCard

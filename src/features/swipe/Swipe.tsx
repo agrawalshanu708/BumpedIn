@@ -51,7 +51,14 @@ const Swipe = ({ navigation }: { navigation: any }) => {
     const getProfileView = () => (
         <View style={styles.profileCardContainer}>
             <ProfileCard
-                firstName={currentProfileData?.name}
+                firstName={'shanu'}
+                lastName={'Agrawal'}
+                batch={2009}
+                designation={'software developer'}
+                organization={'Evive sofwatare analytics'}
+                course={'PGP'}
+                college={'ISB'}
+                navigation={navigation}
             />
         </View>
     )
