@@ -1,8 +1,8 @@
+import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Card, Heading } from 'native-base'
+import { Button, Heading } from 'native-base'
+
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
-import { ROUTES } from './../../routes/Routes'
 import { useConnect } from '../../hooks/useConnect'
 
 const UserSearching = ({ navigation }: { navigation: any }) => {

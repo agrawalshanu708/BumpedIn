@@ -1,5 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
+
 import MessangerProfileCard from './../../components/messangerProfileCard/MessangerProfileCard';
 
 const Inbox = ({ navigation }: { navigation: any }) => {

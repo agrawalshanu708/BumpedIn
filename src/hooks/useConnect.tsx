@@ -1,17 +1,9 @@
-import React, { createContext, useCallback, useContext, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
+
 import { API_URLS } from './../services/apiUrls';
-
-enum LOADING_STATUS {
-    'NOT_YET_STARTED' = 0,
-    'LOADING' = 1,
-    'COMPLETED' = 2,
-    'FAILED' = 3,
-}
-
-
-const isLoadingOrCompletedOrFailed = (...args: LOADING_STATUS[]) => args.some((state: LOADING_STATUS) => state === LOADING_STATUS.LOADING || state === LOADING_STATUS.COMPLETED || state === LOADING_STATUS.FAILED)
-
-const isLoading = (...args: LOADING_STATUS[]) => args.some((state: LOADING_STATUS) => state === LOADING_STATUS.LOADING)
+import { LOADING_STATUS } from '../enums';
+import { isLoadingOrCompletedOrFailed, isLoading } from '../utils';
+import { useApi } from "./useApi";
 
 interface useConnectType {
     getNearByUsers: () => Promise<any>,
@@ -126,7 +118,6 @@ const UseConnectProvider = ({ children }) => {
         nearByUsers,
         totalUsers,
     ])
-
 
     return (
         <UseConnectProvider value={contextValue}>

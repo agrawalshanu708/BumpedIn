@@ -5,19 +5,6 @@ import { Button, Text } from 'native-base';
 import { LOGIN_ERROR_STATICS } from './LoginErrorStatics';
 import { ROUTES } from './../../routes/Routes';
 
-export const SIZE = {
-    XS: 'xs',
-    SM: 'sm',
-    MD: 'md',
-    LG: 'lg',
-    XL: 'xl',
-    '2XL': '2xl',
-    '3XL': '3xl',
-    '4XL': '4xl',
-    '5XL': '5xl',
-    '6XL': '6xl',
-};
-
 const LoginError = ({ navigation }: { navigation: any }) => {
 
     const HandlePress = useCallback(() => {

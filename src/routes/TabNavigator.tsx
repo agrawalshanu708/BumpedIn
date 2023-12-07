@@ -14,7 +14,6 @@ import EditForm from './../features/editForm/EditForm';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-
 function ConnectStackScreen() {
     return (
         <Stack.Navigator>
@@ -42,7 +41,6 @@ function AccountStackScreen() {
         </Stack.Navigator>
     )
 }
-
 
 const TabNavigator = () => (
     <Tab.Navigator screenOptions={{ headerShown: false }}>

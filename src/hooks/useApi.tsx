@@ -5,7 +5,6 @@ import stringTemplate from "string-template";
 
 type ApiParamType = Record<string, string>
 
-
 interface useApiType {
     apiGet: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>,
     apiPost: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>,
@@ -17,15 +16,11 @@ const UseApiContext = createContext<useApiType>({
     apiPost: () => Promise.resolve(null)
 })
 
-
 const api = axios.create({})
-
 
 const useApi = () => useContext(UseApiContext);
 
-
 const UseApiProvider = ({ children }) => {
-
 
     const apiGet = useCallback(
         (url: string,
@@ -42,7 +37,6 @@ const UseApiProvider = ({ children }) => {
             return api.get(fullUrl)
         }, [])
 
-
     const apiPost = useCallback(
         (url: string,
             pathparams: ApiParamType,
@@ -58,12 +52,10 @@ const UseApiProvider = ({ children }) => {
             return api.post(fullUrl, body)
         }, [])
 
-
     const contextValue = useMemo(() => ({
         apiGet,
         apiPost,
     }), [apiGet, apiPost])
-
 
     return (
         <UseApiProvider value={contextValue}>
@@ -71,7 +63,6 @@ const UseApiProvider = ({ children }) => {
         </UseApiProvider>
     )
 }
-
 
 export {
     useApi,

@@ -1,24 +1,19 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Heading, CloseIcon, Text } from 'native-base'
+
 import { SWIPE_STATICS } from './SwipeStatics'
 import { ROUTES } from './../../routes/Routes';
 import ProfileCard from './../../components/profileCard/ProfileCard';
 import { useConnect } from '../../hooks/useConnect';
-
-const isLastProfileCard = (cardsArray, currentProfileData) => {
-    const lastIndex = cardsArray.length - 1;
-    const currentIndex = cardsArray.findIndex((data) => data.id === currentProfileData.id);
-    const isLastCard = currentIndex === lastIndex;
-    return [isLastCard, currentIndex]
-}
-
+import { isLastProfileCard } from '../../utils';
 
 const Swipe = ({ navigation }: { navigation: any }) => {
 
     const { nearByUsers, sendIgnoreRequest, sendConnectionRequest } = useConnect()
 
     const [currentProfileData, setCurrentProfileData] = useState(SWIPE_STATICS.FOUND_USER_LIST[0])
+
     const [isLastCard, currentIndex] = isLastProfileCard(SWIPE_STATICS.FOUND_USER_LIST, currentProfileData)
 
     const handleConnectPress = useCallback(() => {
@@ -46,7 +41,6 @@ const Swipe = ({ navigation }: { navigation: any }) => {
             console.error('Error while ignoring connection', error)
         })
     }, [navigation, currentProfileData])
-
 
     const getProfileView = () => (
         <View style={styles.profileCardContainer}>
