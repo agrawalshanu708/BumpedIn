@@ -1,73 +1,53 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Button, Heading, CloseIcon, Text } from 'native-base'
 import { SWIPE_STATICS } from './SwipeStatics'
 import { ROUTES } from './../../routes/Routes';
+import ProfileCard from './../../components/profileCard/ProfileCard';
 
-const ProfileCard = () => {
-
-    const getNameView = () => (
-        <View>
-            <Heading style={styles2.firstNameText}>Shanu</Heading>
-            <Heading style={styles2.lastNameText}>Agrawal</Heading>
-        </View>
-    )
-
-    const getBatchContentView = () => (
-        <Text style={styles2.batchText}>ISB PGP CLASS OF 2009</Text>
-    )
-
-    const getDesignationView = () => (
-        <View style={styles2.designationContainer}>
-            <Heading>Chief Expendable officer</Heading>
-            <Heading>Bankrupt Unicorn, Inc.</Heading>
-        </View>
-    )
-
-    return (
-        <View style={styles2.container}>
-            {getNameView()}
-            {getBatchContentView()}
-            {getDesignationView()}
-        </View>
-    )
-}
-
-const styles2 = StyleSheet.create({
-    container: {
-        backgroundColor: '#E0F4FF',
-        paddingTop: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingBottom: 100,
-    },
-    firstNameText: {
-        // marginTop: 96
-    },
-    lastNameText: {},
-    batchText: {
-        marginTop: 20
-    },
-    designationContainer: {
-        marginTop: 20,
-        marginBottom: 96
-    },
-
-})
 
 const Swipe = ({ navigation }: { navigation: any }) => {
 
+    const [currentProfileData, setCurrentProfileData] = useState(SWIPE_STATICS.FOUND_USER_LIST[0])
+
     const handleConnectPress = useCallback(() => {
-        navigation.navigate(ROUTES.MATCH_SUCCESS.name)
-    }, [navigation])
+        const lastIndex = SWIPE_STATICS.FOUND_USER_LIST.length - 1;
+        const currentIndex = SWIPE_STATICS.FOUND_USER_LIST.findIndex((data) => data.id === currentProfileData.id);
+        const isLastProfile = currentIndex === lastIndex;
+
+        if (!isLastProfile) {
+            setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
+        } else {
+            navigation.navigate(ROUTES.SEARCHING_USER.name)
+        }
+
+    }, [navigation, currentProfileData])
+
+    const handleIgnorePress = useCallback(() => {
+        const lastIndex = SWIPE_STATICS.FOUND_USER_LIST.length - 1;
+        const currentIndex = SWIPE_STATICS.FOUND_USER_LIST.findIndex((data) => data.id === currentProfileData.id);
+        const isLastProfile = currentIndex === lastIndex;
+
+        if (!isLastProfile) {
+            setCurrentProfileData(SWIPE_STATICS.FOUND_USER_LIST[currentIndex + 1])
+        } else {
+            navigation.navigate(ROUTES.SEARCHING_USER.name)
+        }
+
+    }, [navigation, currentProfileData])
+
 
     const getProfileView = () => (
-        <ProfileCard />
+        <View style={styles.profileCardContainer}>
+            <ProfileCard
+                firstName={currentProfileData?.name}
+            />
+        </View>
     )
 
     const getActionView = () => (
         <View style={styles.actionContainer}>
-            <Button style={styles.ignoreCta}><CloseIcon size="5" mt="0.5" color="white" /></Button>
+            <Button onPress={handleIgnorePress} style={styles.ignoreCta}><CloseIcon size="5" mt="0.5" color="white" /></Button>
             <Button onPress={handleConnectPress} style={styles.connectCta}>{SWIPE_STATICS.CONNECT_CTA.name}</Button>
         </View>
     )
@@ -82,23 +62,25 @@ const Swipe = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 36,
-        paddingVertical: 36,
+        paddingHorizontal: 24,
+        paddingVertical: 24,
+        flex: 1,
+    },
+    profileCardContainer: {
+        flex: 1,
     },
     actionContainer: {
-        marginTop: 36,
+        paddingVertical: 30,
         flexDirection: 'row',
-        columnGap: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
+        columnGap: 12,
     },
     ignoreCta: {
-        backgroundColor: '#FF9209'
+        backgroundColor: '#FF9209',
     },
     connectCta: {
         flex: 1
     },
 })
 
-export default Swipe
+export default Swipe;
 

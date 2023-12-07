@@ -1,61 +1,74 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Card, Heading } from 'native-base'
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
+import { ROUTES } from './../../routes/Routes'
+// import { useConnect } from '../../hooks/useConnect'
 
-const UserSearching = () => {
+const UserSearching = ({ navigation }: { navigation: any }) => {
 
-    const getSearchingView = () => (
-        <View style={styles.bigRing}>
-            <View style={styles.smallRing}>
-                <View style={styles.cardWrapper}>
-                    <Heading>{USER_SEARCHING_STATICS.USER_INITIALS}</Heading>
+    // const { getNearByUsers, nearByUsers } = useConnect
+
+    const [isUserFound, setIsUserFound] = useState(true)
+
+    // useEffect(() => {
+    //     getNearByUsers().then((res: any) => {
+    //         res.data.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserFound(false)
+    //     }).catch((err: any) => {
+    //         console.error(err)
+    //     })
+    // }, [navigation, getNearByUsers, setIsUserFound])
+
+    const getUserSearchingView = () => (
+        <View style={styles.searchingContainer}>
+            <View style={styles.bigRing}>
+                <View style={styles.smallRing}>
+                    <View style={styles.userInitialsWrapper}>
+                        <Heading style={styles.userInitialsText}>{USER_SEARCHING_STATICS.USER_INITIALS}</Heading>
+                    </View>
                 </View>
             </View>
         </View>
     )
 
-    const getContentView = () => (
-        <View style={styles.contentContainer}>
-            <Text style={styles.alumsCountText}>{USER_SEARCHING_STATICS.ALUMS_COUNT_TEXT}</Text>
-            <Text style={styles.NoUserFoundText}>{USER_SEARCHING_STATICS.NO_FOUND_USER_TEXT}</Text>
-            <Button style={styles.inviteCta}>{USER_SEARCHING_STATICS.CTA.name}</Button>
-        </View>
+    const getNoUserFoundContentView = () => (
+        !isUserFound && (
+            <View style={styles.noUserFoundContentContainer}>
+                <Text style={styles.alumsCountText}>{USER_SEARCHING_STATICS.ALUMS_COUNT_TEXT}</Text>
+                <Text style={styles.NoUserFoundText}>{USER_SEARCHING_STATICS.NO_FOUND_USER_TEXT}</Text>
+                <Button style={styles.inviteCta}>{USER_SEARCHING_STATICS.CTA.name}</Button>
+            </View>
+        )
     )
 
     return (
         <View style={styles.container}>
-            {getSearchingView()}
-            {getContentView()}
+            {getUserSearchingView()}
+            {getNoUserFoundContentView()}
         </View>
     )
 }
 
-export default UserSearching
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        paddingHorizontal: 24,
+        paddingVertical: 24,
     },
-    cardWrapper: {
-        borderRadius: 40,
-        width: 80,
-        height: 80,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#E0F4FF',
-    },
-    smallRing: {
-        borderWidth: 1,
-        borderRadius: 80,
-        width: 160,
-        height: 160,
+    searchingContainer: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
     bigRing: {
+        borderWidth: 1,
+        borderRadius: 120,
+        width: 240,
+        height: 240,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    smallRing: {
         borderWidth: 1,
         borderRadius: 100,
         width: 200,
@@ -63,8 +76,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    contentContainer: {
-        marginTop: 36,
+    userInitialsWrapper: {
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#E0F4FF',
+    },
+    userInitialsText: {},
+    noUserFoundContentContainer: {
+        paddingVertical: 24,
     },
     alumsCountText: {
         textAlign: 'center',
@@ -76,5 +98,6 @@ const styles = StyleSheet.create({
     inviteCta: {
         marginTop: 24
     },
-
 })
+
+export default UserSearching;

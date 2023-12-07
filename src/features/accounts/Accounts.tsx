@@ -55,7 +55,7 @@ const styles2 = StyleSheet.create({
 const Accounts = ({ navigation }: { navigation: any }) => {
 
     const handlePress = useCallback(() => {
-        navigation.navigate(ROUTES.EDIT_FORM.name)
+        navigation.navigate(ROUTES.EDIT_USER_DETAILS.name)
     }, [navigation])
 
     const getProfileCard = () => (

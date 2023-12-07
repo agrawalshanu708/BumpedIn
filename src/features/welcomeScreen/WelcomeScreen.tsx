@@ -1,6 +1,6 @@
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
 import { Button, Heading } from 'native-base';
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
@@ -35,7 +35,7 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             console.log("userinfo", userInfo);
-
+            await navigation.navigate(ROUTES.PROFILE_VIEW.name)
         } catch (error: any) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 console.log(error)
@@ -51,7 +51,7 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
 
     const onPressHandler = useCallback(() => {
         // handleGoogleSignin()
-        navigation.navigate(ROUTES.LOGIN_ERROR.name)
+        navigation.navigate(ROUTES.FORM.name)
     }, [])
 
     const getHeaderView = () => (

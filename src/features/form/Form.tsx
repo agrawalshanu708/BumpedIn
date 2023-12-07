@@ -1,39 +1,21 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FormControl, Text, Heading, Input, VStack, Button } from 'native-base'
 
 import { ROUTES } from './../../routes/Routes';
 import { FORM_STATICS } from './FormStatics';
+import Form1 from './../../components/form/Form';
 
 function BuildingAFormExample({ navigation }: { navigation: any }) {
-    const [formData, setData] = React.useState({});
-    const [errors, setErrors] = React.useState({});
-
-    const validate = () => {
-        if (formData.name === undefined) {
-            setErrors({
-                ...errors,
-                name: 'Name is required'
-            });
-            return false;
-        } else if (formData.name.length < 3) {
-            setErrors({
-                ...errors,
-                name: 'Name is too short'
-            });
-            return false;
-        }
-
-        return true;
-    };
+    const [formData, setData] = useState({});
 
     const onSubmit = () => {
-        // validate() ? console.log('Submitted') : console.log('Validation Failed');
-        navigation.navigate(ROUTES.PROFILE_VIEW.name)
+        // navigation.navigate(ROUTES.PROFILE_VIEW.name)
+        console.log('formData', formData)
     };
 
     return <VStack>
-        <FormControl isInvalid={'name' in errors}>
+        <FormControl>
             <FormControl.Label _text={{
                 bold: true
             }}>Designation</FormControl.Label>
@@ -41,9 +23,6 @@ function BuildingAFormExample({ navigation }: { navigation: any }) {
                 ...formData,
                 designation: value
             })} />
-            {/* {'name' in errors ? <FormControl.ErrorMessage>Error</FormControl.ErrorMessage> : <FormControl.HelperText>
-                Name should contain atleast 3 character.
-            </FormControl.HelperText>} */}
             <FormControl.Label _text={{
                 bold: true
             }}>Organisation</FormControl.Label>
@@ -51,9 +30,6 @@ function BuildingAFormExample({ navigation }: { navigation: any }) {
                 ...formData,
                 organisation: value
             })} />
-            {/* {'name' in errors ? <FormControl.ErrorMessage>Error</FormControl.ErrorMessage> : <FormControl.HelperText>
-                Name should contain atleast 3 character.
-            </FormControl.HelperText>} */}
         </FormControl>
         <Button onPress={onSubmit} mt="5" colorScheme="cyan">
             Save
@@ -62,6 +38,10 @@ function BuildingAFormExample({ navigation }: { navigation: any }) {
 }
 
 const Form = ({ navigation }: { navigation: any }) => {
+
+    const handleSkipPress = useCallback(() => {
+        navigation.navigate(ROUTES.PROFILE_VIEW.name)
+    }, [])
 
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
@@ -74,7 +54,7 @@ const Form = ({ navigation }: { navigation: any }) => {
         <View style={styles.formContainer}>
             <Text style={styles.formHeading}>{FORM_STATICS.FORM.heading}</Text>
             <View style={styles.formWrapper}>
-                <BuildingAFormExample navigation={navigation} />
+                <Form1 />
             </View>
         </View>
     )
@@ -86,7 +66,7 @@ const Form = ({ navigation }: { navigation: any }) => {
     )
 
     const getFooterView = () => (
-        <Button style={styles.skipCta} variant="ghost">{FORM_STATICS.FOOTER.cta.name}</Button>
+        <Button onPress={handleSkipPress} style={styles.skipCta} variant="ghost">{FORM_STATICS.FOOTER.cta.name}</Button>
     )
 
     return (
@@ -103,18 +83,19 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 36,
         paddingVertical: 36,
-        flex: 1
+        flex: 1,
     },
     contentContainer: {
         flex: 1,
     },
-    headerContainer: {},
+    headerContainer: {
+    },
     heading: {},
     subHeading: {
         marginTop: 36
     },
     formContainer: {
-        marginTop: 6
+        marginTop: 6,
     },
     formHeading: {
     },

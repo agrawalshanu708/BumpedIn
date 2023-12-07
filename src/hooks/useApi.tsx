@@ -7,8 +7,8 @@ type ApiParamType = Record<string, string>
 
 
 interface useApiType {
-    apiGet: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>;
-    apiPost: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>;
+    apiGet: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>,
+    apiPost: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>,
 }
 
 

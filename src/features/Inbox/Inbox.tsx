@@ -2,17 +2,15 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import MessangerProfileCard from './../../components/messangerProfileCard/MessangerProfileCard';
 
-const Inbox = () => {
+const Inbox = ({ navigation }: { navigation: any }) => {
     return (
         <View style={styles.container}>
-            <MessangerProfileCard />
-            <MessangerProfileCard />
-            <MessangerProfileCard />
+            <MessangerProfileCard navigation={navigation} />
+            <MessangerProfileCard navigation={navigation} />
+            <MessangerProfileCard navigation={navigation} />
         </View>
     )
-}
-
-export default Inbox
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -22,3 +20,5 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     }
 })
+
+export default Inbox;

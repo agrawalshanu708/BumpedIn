@@ -5,4 +5,10 @@ export const API_URLS = {
     SUBMIT: '',
     UPDATE: '',
   },
+  CONNECT: {
+    GET_NEARBY_USERS: '',
+    TOTAL_USERS: '',
+    SEND_REQUEST: '',
+    IGNORE_CONNECT: '',
+  },
 };

@@ -92,7 +92,6 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
             {getHeaderView()}
             {getCardView()}
             {getFooterView()}
-            {getModalView()}
         </View>
     )
 }
@@ -101,21 +100,22 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 36,
         paddingVertical: 36,
+        flex: 1,
     },
-    headerContainer: {},
+    headerContainer: {
+    },
     heading: {},
     subHeading: {
-        marginTop: 12,
+        marginTop: 18,
     },
     cardWrapper: {
-        marginTop: 36
+        flex: 1,
+        justifyContent: 'center',
     },
-    footerContainer: {
-        marginTop: 36
-    },
+    footerContainer: {},
     footerText: {},
     aroundCta: {
-        marginTop: 12,
+        marginTop: 18,
     },
 })
 
