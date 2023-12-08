@@ -5,6 +5,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
 import { useConnect } from '../../hooks/useConnect'
+import { getLocationPermissions } from '../../utils';
 
 const UserSearching = ({ navigation }: { navigation: any }) => {
 
@@ -23,13 +24,15 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
     // }, [navigation, getNearByUsers, setIsUserFound])
 
     useEffect(() => {
-        console.log('permission running')
-        requestLocationPermission()
+        console.log('useEffect running')
+        // requestLocationPermission()
+        getLiveLocation()
     }, [])
 
     const generateLocation = () => {
         Geolocation.getCurrentPosition(
             (position) => {
+                console.log('yess, position',)
                 console.log(position);
             },
             (error) => {
@@ -40,30 +43,41 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
         );
     }
 
-    const requestLocationPermission = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    title: 'Cool Photo App location Permission',
-                    message:
-                        'Cool Photo App needs access to your location ' +
-                        'so you can take awesome pictures.',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                },
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log('You can use the location');
-                generateLocation()
-            } else {
-                console.log('location permission denied');
-            }
-        } catch (err) {
-            console.warn(err);
-        }
-    };
+    const getLiveLocation = async () => {
+        getLocationPermissions().then(() => {
+            console.log('permission granted')
+            generateLocation()
+        }).catch((error) => {
+            console.log('permission cancled')
+        })
+    }
+
+
+
+    // const requestLocationPermission = async () => {
+    //     try {
+    //         const granted = await PermissionsAndroid.request(
+    //             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    //             {
+    //                 title: 'Cool Photo App location Permission',
+    //                 message:
+    //                     'Cool Photo App needs access to your location ' +
+    //                     'so you can take awesome pictures.',
+    //                 buttonNeutral: 'Ask Me Later',
+    //                 buttonNegative: 'Cancel',
+    //                 buttonPositive: 'OK',
+    //             },
+    //         );
+    //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //             console.log('You can use the location');
+    //             generateLocation()
+    //         } else {
+    //             console.log('location permission denied');
+    //         }
+    //     } catch (err) {
+    //         console.warn(err);
+    //     }
+    // };
 
     const getUserSearchingView = () => (
         <View style={styles.searchingContainer}>

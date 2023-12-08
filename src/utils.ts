@@ -1,3 +1,6 @@
+import { PermissionsAndroid, Platform } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+
 import {LOADING_STATUS} from './enums';
 
 const isLoadingOrCompletedOrFailed = (...args: LOADING_STATUS[]) =>
@@ -20,4 +23,32 @@ const isLastProfileCard = (cardsArray, currentProfileData) => {
   return [isLastCard, currentIndex];
 };
 
-export {isLoadingOrCompletedOrFailed, isLoading, isLastProfileCard};
+const getLocationPermissions =  () => new Promise( async (resolve, reject) => {
+  if(Platform.OS === 'ios'){
+    try {
+       const permissionStatus = await Geolocation.requestAuthorization('whenInUse')
+       if(permissionStatus === 'granted'){
+        return resolve('granted')
+       }
+       return reject('permission not grantes')
+    } catch (error) {
+      return reject(error)
+    }
+  } 
+  return PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+  ).then((granted) => {
+    if(granted === PermissionsAndroid.RESULTS.GRANTED){
+      resolve('granted')
+    } else {
+      reject('permission not granted')
+    }
+
+  }).catch((error) => {
+    reject('permission not granted')
+  })
+
+}) 
+
+
+export {isLoadingOrCompletedOrFailed, isLoading, isLastProfileCard, getLocationPermissions};
