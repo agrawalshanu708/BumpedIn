@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
-import { CircleIcon, Button } from 'native-base'
+import { Button, Card, CircleIcon, Text } from 'native-base'
 import { ROUTES } from './../../routes/Routes'
+import { SIZE } from '../../enums';
 
 const MessangerProfileCard = ({ navigation }: { navigation: any }) => {
 
@@ -9,39 +10,25 @@ const MessangerProfileCard = ({ navigation }: { navigation: any }) => {
         navigation.navigate(ROUTES.CHAT_SCREEN.name)
     }, [navigation])
 
-    const getNameView = () => (
-        <Text>Shanu Agrawal</Text>
-    )
-
-    const getBatchContentView = () => (
-        <Text>ISB PGP CLASS OF 2009</Text>
-    )
-
-    const getDesignationView = () => (
-        <View>
-            <Text>Chief Expendable officer</Text>
-            <Text>Bankrupt Unicorn, Inc.</Text>
-        </View>
-    )
-
     const getContentView = () => (
         <View style={styles.contentContainer}>
-            {getNameView()}
-            {getBatchContentView()}
-            {getDesignationView()}
+            <Text fontWeight={600} fontSize={SIZE.MD}>Shanu Agrawal</Text>
+            <Text fontWeight={600} fontSize={SIZE.MD}>ISB PGP CLASS OF 2009</Text>
+            <Text color={'gray.600'} fontSize={SIZE.MD}>Chief Expendable officer</Text>
+            <Text color={'gray.600'} fontSize={SIZE.MD}>Bankrupt Unicorn, Inc.</Text>
         </View>
     )
 
     const getMessageTime = () => (
-        <Text style={styles.messageTimeText} >11h</Text>
+        <Text fontWeight={600} fontSize={SIZE.MD} style={styles.messageTimeText} >11h</Text>
     )
 
     const getOnlineStatus = () => (
-        <CircleIcon size="3" mt="0.5" color="emerald.500" />
+        <CircleIcon size="3" mt="0.5" color={'primary.900'} />
     )
 
     return (
-        <Button onPress={handleChatPress} style={styles.container}>
+        <Button backgroundColor={'primary.100'} onPress={handleChatPress} style={styles.container}>
             {getContentView()}
             {getMessageTime()}
             {getOnlineStatus()}
@@ -51,13 +38,10 @@ const MessangerProfileCard = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
-        backgroundColor: '#E0F4FF',
         flexDirection: 'row',
-        columnGap: 10,
     },
     contentContainer: {
-        flex: 1
+        borderWidth: 1,
     },
     messageTimeText: {
         justifyContent: 'center',

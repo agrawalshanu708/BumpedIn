@@ -4,6 +4,7 @@ import { Button, Text } from 'native-base';
 
 import { LOGIN_ERROR_STATICS } from './LoginErrorStatics';
 import { ROUTES } from './../../routes/Routes';
+import { SIZE } from './../../enums';
 
 const LoginError = ({ navigation }: { navigation: any }) => {
 
@@ -13,7 +14,7 @@ const LoginError = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            <Text fontSize={SIZE.XS} style={styles.text}>{LOGIN_ERROR_STATICS.ERROR_TEXT}</Text>
+            <Text style={styles.text}>{LOGIN_ERROR_STATICS.ERROR_TEXT_1}<Text bold>{LOGIN_ERROR_STATICS.ERROR_TEXT_2}</Text><Text>{LOGIN_ERROR_STATICS.ERROR_TEXT_3}</Text></Text>
             <Button onPress={HandlePress} style={styles.tryAgainCta}>{LOGIN_ERROR_STATICS.CTA.name}</Button>
         </View>
     );

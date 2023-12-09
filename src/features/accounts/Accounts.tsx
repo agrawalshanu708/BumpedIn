@@ -12,17 +12,19 @@ const Accounts = ({ navigation }: { navigation: any }) => {
     }, [])
 
     const getProfileCard = () => (
-        <ProfileCard
-            firstName={'shanu'}
-            lastName={'Agrawal'}
-            batch={2009}
-            designation={'software developer'}
-            organization={'Evive software analytics'}
-            course={'PGP'}
-            college={'ISB'}
-            editCta={true}
-            navigation={navigation}
-        />
+        <View style={styles.cardWrapper}>
+            <ProfileCard
+                firstName={'shanu'}
+                lastName={'Agrawal'}
+                batch={2009}
+                designation={'software developer'}
+                organization={'Evive software analytics'}
+                course={'PGP'}
+                college={'ISB'}
+                editCta={true}
+                navigation={navigation}
+            />
+        </View>
     )
 
     const getContentView = () => (
@@ -51,10 +53,13 @@ const styles = StyleSheet.create({
         paddingVertical: 24,
         flex: 1,
     },
-    contentContainer: {
+    cardWrapper: {
         flex: 1,
+    },
+    contentContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        paddingVertical: 30,
     },
     contentText: {},
     signoutCta: {

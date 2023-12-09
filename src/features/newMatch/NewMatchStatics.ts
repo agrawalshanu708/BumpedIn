@@ -1,5 +1,5 @@
 export const NEW_MATCH_STATICS = {
-  HEADING: 'AWESOME',
+  HEADING: 'Awesome',
   SUBHEADING: 'You have connected with Nirav!',
   cta: {
     name: 'Send A message',

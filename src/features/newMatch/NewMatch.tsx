@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { NEW_MATCH_STATICS } from './NewMatchStatics';
-import { Button, Heading } from 'native-base';
+import { Button, Heading, Text } from 'native-base';
 import { ROUTES } from '../../routes/Routes';
+import { SIZE } from '../../enums';
 
 const NewMatch = ({ navigation }: { navigation: any }) => {
 
@@ -17,14 +18,14 @@ const NewMatch = ({ navigation }: { navigation: any }) => {
 
     const getContentView = () => (
         <View style={styles.contentContainer}>
-            <Heading style={styles.heading}>{NEW_MATCH_STATICS.HEADING}</Heading>
-            <Heading style={styles.subHeading}>
+            <Heading size={SIZE['2XL']} style={styles.heading}>{NEW_MATCH_STATICS.HEADING}</Heading>
+            <Heading fontWeight={500} size={SIZE.XL} style={styles.subHeading}>
                 {NEW_MATCH_STATICS.SUBHEADING}
             </Heading>
-            <Button onPress={handleChatPress} style={styles.sendMessageCta}>
+            <Button paddingRight={10} paddingLeft={10} onPress={handleChatPress} style={styles.sendMessageCta}>
                 {NEW_MATCH_STATICS.cta.name}
             </Button>
-            <Text style={styles.expiredText}>{NEW_MATCH_STATICS.EXPIRED_TEXT}</Text>
+            <Text fontSize={SIZE.MD} color={'gray.600'} style={styles.expiredText}>{NEW_MATCH_STATICS.EXPIRED_TEXT}</Text>
         </View>
     );
 
