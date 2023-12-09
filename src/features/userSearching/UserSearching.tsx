@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, Heading } from 'native-base'
+import { StyleSheet, View } from 'react-native'
+import { Button, Card, Text, Heading } from 'native-base'
 
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
 import { useConnect } from '../../hooks/useConnect'
+import { SIZE } from '../../enums'
 
 const UserSearching = ({ navigation }: { navigation: any }) => {
 
@@ -25,9 +26,9 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
         <View style={styles.searchingContainer}>
             <View style={styles.bigRing}>
                 <View style={styles.smallRing}>
-                    <View style={styles.userInitialsWrapper}>
+                    <Card backgroundColor={'primary.100'} style={styles.userInitialsWrapper}>
                         <Heading style={styles.userInitialsText}>{USER_SEARCHING_STATICS.USER_INITIALS}</Heading>
-                    </View>
+                    </Card>
                 </View>
             </View>
         </View>
@@ -36,9 +37,11 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
     const getNoUserFoundContentView = () => (
         isUserNotFoundContentSHown && (
             <View style={styles.noUserFoundContentContainer}>
-                <Text style={styles.alumsCountText}>{USER_SEARCHING_STATICS.ALUMS_COUNT_TEXT}</Text>
-                <Text style={styles.NoUserFoundText}>{USER_SEARCHING_STATICS.NO_FOUND_USER_TEXT}</Text>
-                <Button style={styles.inviteCta}>{USER_SEARCHING_STATICS.CTA.name}</Button>
+                <Text fontSize={SIZE.XL} style={styles.alumsCountText}>{USER_SEARCHING_STATICS.ALUMS_COUNT_TEXT}</Text>
+                <Text fontSize={SIZE.XL} style={styles.NoUserFoundText}>{USER_SEARCHING_STATICS.NO_FOUND_USER_TEXT}</Text>
+                <View style={styles.actionContainer}>
+                    <Button style={styles.inviteCta}>{USER_SEARCHING_STATICS.CTA.name}</Button>
+                </View>
             </View>
         )
     )
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#E0F4FF',
     },
     userInitialsText: {},
     noUserFoundContentContainer: {
@@ -95,7 +97,9 @@ const styles = StyleSheet.create({
     },
     NoUserFoundText: {
         textAlign: 'center',
-        marginTop: 6
+    },
+    actionContainer: {
+        alignItems: 'center',
     },
     inviteCta: {
         marginTop: 24

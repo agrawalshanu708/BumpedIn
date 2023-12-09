@@ -70,13 +70,23 @@ const Form1 = (props) => {
                     onChangeText={handleOrganizationChange}
                 />
             </FormControl>
-            <Button isDisabled={isDesignationValueChange && isOrganisationValueChange} onPress={onDataSubmit} mt="5" colorScheme="cyan">
-                Save
-            </Button>
+            <View style={styles.actionContainer}>
+                <Button style={styles.saveCta} backgroundColor={'primary.900'} onPress={onDataSubmit} mt="5" colorScheme="cyan">
+                    Save
+                </Button>
+            </View>
         </View>
     );
 };
+// isDisabled={isDesignationValueChange && isOrganisationValueChange}
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    actionContainer: {
+        alignItems: 'flex-start'
+    },
+    saveCta: {
+        width: 70
+    }
+});
 
 export default Form1;

@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useCallback } from 'react';
-import { Button, Heading } from 'native-base';
+import { Button, Text, Heading, Card } from 'native-base';
 import { ROUTES } from '../../routes/Routes';
+import { SIZE } from './../../enums';
 
 const ProfileCard = (props: any) => {
 
@@ -13,47 +14,56 @@ const ProfileCard = (props: any) => {
 
     const getContentView = () => (
         <View style={styles.contentContainer}>
-            <Heading style={styles.firstNameText}>{firstName}</Heading>
-            <Heading style={styles.lastNameText}>{lastName}</Heading>
-            <Text style={styles.batchText}>{college} ${course} CLASS OF ${batch}</Text>
-            <Heading style={styles.designationText}>{designation}</Heading>
-            <Heading style={styles.organisationText}>{organization}</Heading>
+            <Heading size={SIZE['2XL']} style={styles.firstNameText}>{firstName}</Heading>
+            <Heading size={SIZE['2XL']} style={styles.lastNameText}>{lastName}</Heading>
+            <Text fontWeight={600} fontSize={SIZE.XL} style={styles.batchText}>{college} {course} CLASS OF {batch}</Text>
+            <Text fontWeight={600} fontSize={SIZE.LG} style={styles.designationText}>{designation},</Text>
+            <Text fontWeight={600} fontSize={SIZE.LG} style={styles.organisationText}>{organization}.</Text>
         </View>
     )
 
     const getActionView = () => (
-        editCta && <Button onPress={handleEditPress} style={styles.editCta} >Edit</Button>
+        editCta && <View style={styles.actionContainer}>
+            <Button onPress={handleEditPress} style={styles.editCta} >Edit</Button>
+        </View>
     )
 
     return (
-        <View style={styles.container}>
+        <Card backgroundColor={'primary.100'} style={styles.container}>
             {getContentView()}
             {getActionView()}
-        </View>
+        </Card>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#E0F4FF',
-        paddingHorizontal: 30,
-        paddingVertical: 30,
+        flex: 1,
+        marginVertical: 30,
     },
-    contentContainer: {},
-    firstNameText: {},
-    lastNameText: {},
+    contentContainer: {
+    },
+    firstNameText: {
+        fontWeight: '600',
+    },
+    lastNameText: {
+        fontWeight: '600',
+    },
     batchText: {
-        marginTop: 20
+        marginTop: 20,
     },
     designationText: {
         marginTop: 20,
     },
     organisationText: {
-        marginTop: 6
+        marginTop: 6,
+    },
+    actionContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
     },
     editCta: {
         alignSelf: 'flex-end',
-        marginTop: 12
     }
 })
 

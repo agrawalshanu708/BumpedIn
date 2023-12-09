@@ -1,6 +1,6 @@
 export const PROFILE_INFO_STATICS = {
   HEADER: {
-    heading: 'All Done!',
+    heading: 'All done!',
     subHeading: 'This is how your profile will appear to others',
   },
   CARD: {

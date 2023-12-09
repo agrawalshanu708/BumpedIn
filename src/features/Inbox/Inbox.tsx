@@ -15,7 +15,6 @@ const Inbox = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
         gap: 6,
         paddingHorizontal: 12,
         paddingVertical: 12,

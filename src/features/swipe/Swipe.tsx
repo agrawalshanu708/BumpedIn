@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Heading, CloseIcon, Text } from 'native-base'
+import { Button, Heading, CloseIcon, Text, Tooltip } from 'native-base'
 
 import { SWIPE_STATICS } from './SwipeStatics'
 import { ROUTES } from './../../routes/Routes';
@@ -60,7 +60,9 @@ const Swipe = ({ navigation }: { navigation: any }) => {
     const getActionView = () => (
         <View style={styles.actionContainer}>
             <Button onPress={handleIgnorePress} style={styles.ignoreCta}><CloseIcon size="5" mt="0.5" color="white" /></Button>
-            <Button onPress={handleConnectPress} style={styles.connectCta}>{SWIPE_STATICS.CONNECT_CTA.name}</Button>
+            <Tooltip label="Click here to read more" openDelay={500}>
+                <Button onPress={handleConnectPress} style={styles.connectCta}>{SWIPE_STATICS.CONNECT_CTA.name}</Button>
+            </Tooltip>
         </View>
     )
 
@@ -76,15 +78,15 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 24,
         paddingVertical: 24,
-        flex: 1,
     },
     profileCardContainer: {
-        flex: 1,
+        height: 400,   //remove this
     },
     actionContainer: {
         paddingVertical: 30,
         flexDirection: 'row',
         columnGap: 12,
+        marginTop: 30,
     },
     ignoreCta: {
         backgroundColor: '#FF9209',

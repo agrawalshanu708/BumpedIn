@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { Button, Heading, Modal } from 'native-base'
+import { Button, Heading, Text } from 'native-base'
 import { PROFILE_INFO_STATICS } from './ProfileInfoStatics'
 import { ROUTES } from './../../routes/Routes'
 import { useUserProfessionalData } from '../../hooks/useUserProfessionalData'
 import ProfileCard from '../../components/profileCard/ProfileCard';
+import { SIZE } from '../../enums'
 
 const ProfileInfo = ({ navigation }: { navigation: any }) => {
 
@@ -22,8 +23,8 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
 
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
-            <Heading style={styles.heading}>{PROFILE_INFO_STATICS.HEADER.heading}</Heading>
-            <Text style={styles.subHeading}>{PROFILE_INFO_STATICS.HEADER.subHeading}</Text>
+            <Heading size={SIZE['2XL']} fontWeight={600} style={styles.heading}>{PROFILE_INFO_STATICS.HEADER.heading}</Heading>
+            <Text fontSize={SIZE.XL} style={styles.subHeading}>{PROFILE_INFO_STATICS.HEADER.subHeading}</Text>
         </View>
     )
 
@@ -44,7 +45,7 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
 
     const getFooterView = () => (
         <View style={styles.footerContainer}>
-            <Text style={styles.footerText}>{PROFILE_INFO_STATICS.FOOTER.text}</Text>
+            <Text fontSize={SIZE.LG} style={styles.footerText}>{PROFILE_INFO_STATICS.FOOTER.text}</Text>
             <Button onPress={handlePress} style={styles.aroundCta}>{PROFILE_INFO_STATICS.FOOTER.cta.name}</Button>
         </View>
     )
@@ -74,10 +75,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-    footerContainer: {},
+    footerContainer: {
+        marginTop: 80,
+    },
     footerText: {},
     aroundCta: {
-        marginTop: 18,
+        marginTop: 36,
     },
 })
 

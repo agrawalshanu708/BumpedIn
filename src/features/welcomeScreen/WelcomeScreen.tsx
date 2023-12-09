@@ -1,9 +1,9 @@
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import axios from 'axios';
 
-import { Button, Heading } from 'native-base';
+import { Button, Heading, Text } from 'native-base';
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
 import { ROUTES } from './../../routes/Routes';
 import { API_URLS } from '../../services/apiUrls';
@@ -52,12 +52,12 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
             <Heading style={styles.heading} size={SIZE.XL}>{WELCOME_SCREEN_STATICS.HEADER.heading}</Heading>
-            <Text style={styles.subHeading}>{WELCOME_SCREEN_STATICS.HEADER.subHeading}</Text>
+            <Text color={'gray.600'} style={styles.subHeading}>{WELCOME_SCREEN_STATICS.HEADER.subHeading}</Text>
         </View>
     );
 
     const getSignInText = () => (
-        <Text style={styles.disclaimer}>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT}</Text>
+        <Text color={'gray.900'} style={styles.disclaimer}>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_1}<Text bold>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_2}</Text><Text>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_3}</Text></Text>
     );
 
     const getActionView = () => (

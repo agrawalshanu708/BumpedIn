@@ -1,6 +1,7 @@
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Button, Card, Heading, Input } from 'native-base'
+import { Button, Card, Heading, Text, Input } from 'native-base'
+import { SIZE } from '../../enums'
 
 
 const MESSAGE_HISTORY = [{
@@ -47,9 +48,9 @@ const Chat = () => {
     }, [messageInput, messageHistory])
 
     const getSenderName = (messageData: any) => (
-        <View style={styles.senderNameContainer}>
-            <Text>{messageData.name}</Text>
-        </View>
+        <Card backgroundColor={messageData.sender === MESSAGE_SENDER_TYPE.FIRST_USER ? 'primary.900' : 'gray.500'} style={styles.senderNameContainer}>
+            <Text color={'white'}>{messageData.name}</Text>
+        </Card>
     )
 
     const getMessageContent = (messageData: any) => (
@@ -59,10 +60,10 @@ const Chat = () => {
     )
 
     const getFirstUserMessageView = (messageData: any) => (
-        <View style={styles.firstUserContainer}>
+        <Card style={styles.firstUserContainer}>
             {getMessageContent(messageData)}
             {getSenderName(messageData)}
-        </View>
+        </Card>
     )
 
     const getSecondUserMessageView = (messageData: any) => (
@@ -87,10 +88,9 @@ const Chat = () => {
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
             <View style={styles.headerContent}>
-                <Text>Back {messageInput}</Text>
-                <Heading>Nirav Rawell</Heading>
+                <Heading fontWeight={600} size={SIZE.LG} style={styles.senderName}>Nirav Rawell</Heading>
             </View>
-            <Text style={styles.headerDisclaimer}>This Chat will end and deleted in 12 hours</Text>
+            <Card padding={2} backgroundColor={'gray.400'} style={styles.headerDisclaimer}>This Chat will end and deleted in 12 hours</Card>
         </View>
     )
 
@@ -102,7 +102,7 @@ const Chat = () => {
 
     const getFooterView = () => (
         <View style={styles.footerContainer}>
-            <Input value={messageInput} onChange={onMessageInputChange} style={styles.textInput} InputRightElement={<Button onPress={handleSendMessage} size="xs" w="1/6">send</Button>} />
+            <Input value={messageInput} onChange={onMessageInputChange} style={styles.textInput} InputRightElement={<Button backgroundColor={'primary.900'} onPress={handleSendMessage} size="xs" w="1/6">send</Button>} />
         </View>
     )
 
@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
     headerContainer: {
     },
     headerContent: {
-        flexDirection: 'row',
         alignItems: 'center',
-        columnGap: 24,
+    },
+    senderName: {
+        textAlign: 'center',
     },
     headerDisclaimer: {
-        backgroundColor: '#d1d0d0',
         paddingVertical: 6,
         textAlign: 'center',
     },
@@ -158,7 +158,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     senderNameContainer: {
-        backgroundColor: '#D0A2F7',
         height: 48,
         width: 48,
         borderRadius: 24,
@@ -166,8 +165,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     messageContentContainer: {
-        backgroundColor: '#F1EAFF',
         borderRadius: 10,
+        backgroundColor: '#ffff'
     }
 })
 
