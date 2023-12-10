@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Easing, StyleSheet, View } from 'react-native'
 import { Button, Card, Text, Heading } from 'native-base'
 
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
 import { useConnect } from '../../hooks/useConnect'
 import { SIZE } from '../../enums'
 import { ROUTES } from '../..//routes/Routes'
+import PulseAnimation from '../../components/PulseAnimation'
+import { useAuth } from '../../hooks/useAuth'
 
 const UserSearching = ({ navigation }: { navigation: any }) => {
 
     const { loadingStatus, getNearByUsers, nearByUsers } = useConnect()
+    const { userData } = useAuth()
+
+    const firstName = userData?.firstName?.charAt(0).toUpperCase() || ''
+    const lastName = userData?.lastName?.charAt(0).toUpperCase() || ''
+
+
+    const userNameInitials = `${firstName}${lastName}`
 
     const [isUserNotFoundContentSHown, setIsUserNotFoundContentSHown] = useState(false)
 
@@ -37,7 +46,7 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
     const getUserSearchingView = () => (
         <View style={styles.searchingContainer}>
             <View style={styles.bigRing}>
-                <View style={styles.smallRing}>
+                <View style={styles.wrapper}>
                     <Card backgroundColor={'primary.100'} style={styles.userInitialsWrapper}>
                         <Heading style={styles.userInitialsText}>{USER_SEARCHING_STATICS.USER_INITIALS}</Heading>
                     </Card>
@@ -60,7 +69,10 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            {getUserSearchingView()}
+            {/* {getUserSearchingView()} */}
+            <PulseAnimation
+                initials={'SA'}
+            />
             {getNoUserFoundContentView()}
         </View>
     )
@@ -103,6 +115,7 @@ const styles = StyleSheet.create({
     userInitialsText: {},
     noUserFoundContentContainer: {
         paddingVertical: 24,
+
     },
     alumsCountText: {
         textAlign: 'center',
@@ -116,6 +129,11 @@ const styles = StyleSheet.create({
     inviteCta: {
         marginTop: 24
     },
+    wrapper: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
 })
 
 export default UserSearching;
