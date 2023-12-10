@@ -4,13 +4,15 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Heading, Text } from 'native-base'
 import { PROFILE_INFO_STATICS } from './ProfileInfoStatics'
 import { ROUTES } from './../../routes/Routes'
-import { useUserProfessionalData } from '../../hooks/useUserProfessionalData'
+import { useUserData } from '../../hooks/useUserData'
 import ProfileCard from '../../components/profileCard/ProfileCard';
 import { SIZE } from '../../enums'
+import { useAuth } from '../../hooks/useAuth'
 
 const ProfileInfo = ({ navigation }: { navigation: any }) => {
 
-    const { formData } = useUserProfessionalData()
+    const { formData } = useUserData()
+    const { userData } = useAuth()
 
     console.log('formData', formData)
 
@@ -31,13 +33,13 @@ const ProfileInfo = ({ navigation }: { navigation: any }) => {
     const getCardView = () => (
         <View style={styles.cardWrapper}>
             <ProfileCard
-                firstName={'shanu'}
-                lastName={'Agrawal'}
-                batch={2009}
-                designation={'software developer'}
-                organization={'Evive sofwatare analytics'}
-                course={'PGP'}
-                college={'ISB'}
+                firstName={userData?.firstName}
+                lastName={userData?.lastName}
+                batch={userData?.class}
+                designation={formData?.designation}
+                organization={formData?.organization}
+                course={userData?.program}
+                college={userData?.school}
                 navigation={navigation}
             />
         </View>

@@ -12,54 +12,23 @@ import { SIZE } from '../../enums';
 import { useAuth } from '../../hooks/useAuth';
 
 const WelcomeScreen = ({ navigation }: { navigation: any }) => {
-    const api = axios.create({})
 
-    const { apiGet, apiPost } = useApi()
     const { userData, handleGoogleSignin, signInStatus } = useAuth()
 
     useEffect(() => {
         GoogleSignin.configure()
     }, [])
 
-    // const handleGoogleSignin = async () => {
-    //     console.log('google sigin start')
-    //     try {
-    //         await GoogleSignin.hasPlayServices();
-    //         const userInfo = await GoogleSignin.signIn();
-    //         console.log('userinfo', userInfo);
-    //         const requestPayload = await generatePayload(userInfo);
-    //         console.log('requestPayload', requestPayload);
-    //         const checkingUserIsValid = await api.post(
-    //             API_URLS.AUTH.VERIFY_MAIL,
-    //             requestPayload,
-    //         );
-    //         console.log('checkingUserIsValid', checkingUserIsValid);
-    //     } catch (error: any) {
-    //         console.log('error-1', error);
-    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //             console.log(error)
-    //             navigation.navigate(ROUTES.LOGIN_ERROR.name)
-    //         } else if (error.code === statusCodes.IN_PROGRESS) {
-    //             console.log(error)
-    //         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //             console.log(error)
-    //             navigation.navigate(ROUTES.LOGIN_ERROR.name)
-    //         } else {
-    //             console.log('error', error)
-    //         }
-    //     }
-    // };
-
     const onPressHandler = useCallback(() => {
         console.log('signInStatus', signInStatus)
         handleGoogleSignin().then(() => {
             console.log('success', userData)
-            // navigation.navigate(ROUTES.FORM.name)
+            navigation.navigate(ROUTES.FORM.name)
         }).catch((error) => {
-            console.log('error', error)
-            // navigation.navigate(ROUTES.LOGIN_ERROR.name)
+            console.log('error---', error)
+            navigation.navigate(ROUTES.LOGIN_ERROR.name)
         })
-    }, [])
+    }, [navigation])
 
     const getHeaderView = () => (
         <View style={styles.headerContainer}>

@@ -4,8 +4,13 @@ import { Button } from 'native-base'
 
 import { ACCOUNT_STATICS } from './AccountStatics'
 import ProfileCard from '../../components/profileCard/ProfileCard';
+import { useAuth } from '../../hooks/useAuth';
+import { useUserData } from '../../hooks/useUserData';
 
 const Accounts = ({ navigation }: { navigation: any }) => {
+
+    const { userData } = useAuth()
+    const { formData } = useUserData()
 
     const handlePress = useCallback(() => {
         //signout
@@ -14,15 +19,15 @@ const Accounts = ({ navigation }: { navigation: any }) => {
     const getProfileCard = () => (
         <View style={styles.cardWrapper}>
             <ProfileCard
-                firstName={'shanu'}
-                lastName={'Agrawal'}
-                batch={2009}
-                designation={'software developer'}
-                organization={'Evive software analytics'}
-                course={'PGP'}
-                college={'ISB'}
-                editCta={true}
+                firstName={userData?.firstName}
+                lastName={userData?.lastName}
+                batch={userData?.class}
+                designation={formData?.designation}
+                organization={formData?.organization}
+                course={userData?.program}
+                college={userData?.school}
                 navigation={navigation}
+                editCta={true}
             />
         </View>
     )

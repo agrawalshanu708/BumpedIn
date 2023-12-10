@@ -2,11 +2,11 @@ export const API_URLS = {
   AUTH: {
     VERIFY_MAIL: 'https://bumpedin.app/api/users',
   },
-  PROFESSIONAL_DATA: {
+  USER_DATA: {
     VERIFY_MAIL: '',
     GET: '',
-    SUBMIT: '',
-    UPDATE: '',
+    SUBMIT: 'https://bumpedin.app/api/users/',
+    UPDATE: 'https://bumpedin.app/api/users/{id}',
   },
   CONNECT: {
     GET_NEARBY_USERS: '',
@@ -14,4 +14,4 @@ export const API_URLS = {
     SEND_REQUEST: '',
     IGNORE_CONNECT: '',
   },
-};
+}

@@ -41,11 +41,11 @@ function getUserContentFromEmail(email: string) {
 
 const generateSignInPayload = async (userInfo: any) => {
   const {user} = userInfo
-  const [schoolName, programName, batch] = getUserContentFromEmail(user?.email)
+  const data = getUserContentFromEmail(user?.email)
 
-  const batchYear = batch
-  const program = programName
-  const school = schoolName
+  const batchYear = data[2]
+  const program = data[1].toUpperCase()
+  const school = data[0].toUpperCase()
   const payload = {
     email: user.email || '',
     firstName: user.givenName || '',
@@ -53,7 +53,7 @@ const generateSignInPayload = async (userInfo: any) => {
     class: batchYear,
     program: program,
     school: school,
-    cohort: `${school} + ${program} + Class of ${batchYear}`,
+    cohort: `${school} ${program} Class of ${batchYear}`,
   }
   return payload
 }

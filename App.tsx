@@ -5,6 +5,7 @@ import RootNavigator from './src/routes/RootNavigator';
 import { NativeBaseProvider } from 'native-base';
 import { theme } from './src/theme';
 import { UseAuthProvider } from './src/hooks/useAuth';
+import { UseUserDataProvider } from './src/hooks/useUserData';
 
 function App(): JSX.Element {
   return (
@@ -12,7 +13,9 @@ function App(): JSX.Element {
       <NativeBaseProvider theme={theme}>
         <SafeAreaView style={styles.container}>
           <UseAuthProvider>
-            <RootNavigator />
+            <UseUserDataProvider>
+              <RootNavigator />
+            </UseUserDataProvider>
           </UseAuthProvider>
         </SafeAreaView>
       </NativeBaseProvider>

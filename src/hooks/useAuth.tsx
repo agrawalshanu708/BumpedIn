@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import axios from 'axios';
 
-import { API_URLS } from 'services/apiUrls';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { API_URLS } from '../services/apiUrls';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { generateSignInPayload, isLoading } from '../utils';
 import { LOADING_STATUS } from '../enums';
+import { useApi } from './useApi';
 
 type Props = {
     children: React.ReactNode,
@@ -45,7 +46,6 @@ const UseAuthContext = createContext<useAuthType>({
 const useAuth = () => useContext(UseAuthContext);
 
 const UseAuthProvider = ({ children }: Props) => {
-    const api = axios.create({});
     const [userData, setUserData] = useState<UserDataType>({})
     const [signInStatus, setSignInStatus] = useState(LOADING_STATUS.NOT_YET_STARTED)
 
@@ -63,50 +63,32 @@ const UseAuthProvider = ({ children }: Props) => {
             console.log('userinfo', userInfo);
             const requestPayload = await generateSignInPayload(userInfo);
             console.log('requestPayload', requestPayload);
-            const response = await api.post(
+            const response = await axios.post(
                 API_URLS.AUTH.VERIFY_MAIL,
                 requestPayload,
             );
             setUserData({ ...requestPayload, _id: response.data.user._id })
-            console.log('checkingUserIsValid', response);
             setSignInStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
-        } catch (error) {
+        } catch (error: any) {
             setSignInStatus(LOADING_STATUS.FAILED)
             reject(error)
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
         }
-    }), [signInStatus, userData, api.post])
-
-
-    // const handleGoogleSignin = async () => {
-    //     try {
-    //         await GoogleSignin.hasPlayServices();
-    //         const userInfo = await GoogleSignin.signIn();
-    //         console.log('userinfo', userInfo);
-    //         const requestPayload = await generateSignInPayload(userInfo);
-    //         console.log('requestPayload', requestPayload);
-    //         const response = await api.post(
-    //             API_URLS.AUTH.VERIFY_MAIL,
-    //             requestPayload,
-    //         );
-    //         setUserData({ ...requestPayload, _id: response.data.user._id })
-    //         console.log('checkingUserIsValid', response);
-    //     } catch (error: any) {
-    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //             console.log(error);
-    //         } else if (error.code === statusCodes.IN_PROGRESS) {
-    //             console.log(error);
-    //         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //             console.log(error);
-    //         } else {
-    //         }
-    //     }
-    // };
+    }), [signInStatus, userData])
 
     const contextValue = useMemo(() => ({
         userData,
         handleGoogleSignin,
-        signInStatus
+        signInStatus,
     }),
         [
             userData,
