@@ -6,6 +6,7 @@ import { NativeBaseProvider } from 'native-base';
 import { theme } from './src/theme';
 import { UseAuthProvider } from './src/hooks/useAuth';
 import { UseUserDataProvider } from './src/hooks/useUserData';
+import { UseConnectProvider } from './src/hooks/useConnect';
 
 function App(): JSX.Element {
   return (
@@ -14,7 +15,9 @@ function App(): JSX.Element {
         <SafeAreaView style={styles.container}>
           <UseAuthProvider>
             <UseUserDataProvider>
-              <RootNavigator />
+              <UseConnectProvider>
+                <RootNavigator />
+              </UseConnectProvider>
             </UseUserDataProvider>
           </UseAuthProvider>
         </SafeAreaView>

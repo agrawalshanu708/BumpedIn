@@ -1,26 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Card, Text, Heading } from 'native-base'
 
 import { USER_SEARCHING_STATICS } from './UserSearchingStatics'
 import { useConnect } from '../../hooks/useConnect'
 import { SIZE } from '../../enums'
+import { ROUTES } from '../..//routes/Routes'
 
 const UserSearching = ({ navigation }: { navigation: any }) => {
 
-    const { getNearByUsers, nearByUsers } = useConnect
+    const { loadingStatus, getNearByUsers, nearByUsers } = useConnect()
 
     const [isUserNotFoundContentSHown, setIsUserNotFoundContentSHown] = useState(false)
 
     const location = { longitude: 11, latitude: 10 }
 
     // useEffect(() => {
+    //     console.log('ruunug function')
     //     getNearByUsers(location).then((res: any) => {
     //         res.data.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserNotFoundContentSHown(true)
     //     }).catch((err: any) => {
     //         console.error(err)
     //     })
-    // }, [navigation, getNearByUsers, setIsUserFound])
+    // }, [navigation, getNearByUsers])
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log('in useeffect', 'loadingstatus', loadingStatus)
+            getNearByUsers(location)
+        });
+        return unsubscribe;
+    }, [navigation, getNearByUsers]);
+
+    console.log('final-loadingStatus', loadingStatus);
 
     const getUserSearchingView = () => (
         <View style={styles.searchingContainer}>
