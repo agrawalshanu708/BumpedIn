@@ -1,5 +1,7 @@
 export const API_URLS = {
-  AUTH: {},
+  AUTH: {
+    VERIFY_MAIL: 'https://bumpedin.app/api/users',
+  },
   PROFESSIONAL_DATA: {
     VERIFY_MAIL: '',
     GET: '',

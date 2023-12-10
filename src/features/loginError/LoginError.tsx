@@ -14,8 +14,8 @@ const LoginError = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{LOGIN_ERROR_STATICS.ERROR_TEXT_1}<Text bold>{LOGIN_ERROR_STATICS.ERROR_TEXT_2}</Text><Text>{LOGIN_ERROR_STATICS.ERROR_TEXT_3}</Text></Text>
-            <Button onPress={HandlePress} style={styles.tryAgainCta}>{LOGIN_ERROR_STATICS.CTA.name}</Button>
+            <Text fontSize={SIZE.MD} color={'gray.900'} style={styles.text}>{LOGIN_ERROR_STATICS.ERROR_TEXT_1}<Text bold>{LOGIN_ERROR_STATICS.ERROR_TEXT_2}</Text><Text>{LOGIN_ERROR_STATICS.ERROR_TEXT_3}</Text></Text>
+            <Button size={SIZE.MD} onPress={HandlePress} style={styles.tryAgainCta}><Text fontWeight={600} fontSize={15} color={'white'}>{LOGIN_ERROR_STATICS.CTA.name}</Text></Button>
         </View>
     );
 };
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
 
     tryAgainCta: {
-        marginTop: 6
+        marginTop: 12
     },
 });
 
