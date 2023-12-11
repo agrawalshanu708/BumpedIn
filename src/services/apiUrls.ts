@@ -9,7 +9,7 @@ export const API_URLS = {
     UPDATE: 'https://bumpedin.app/api/users/{id}',
   },
   CONNECT: {
-    GET_NEARBY_USERS: '',
+    GET_NEARBY_USERS: 'https://bumpedin.app/api/locations',
     TOTAL_USERS: '',
     SEND_REQUEST: '',
     IGNORE_CONNECT: '',

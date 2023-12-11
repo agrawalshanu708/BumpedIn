@@ -7,10 +7,13 @@ import { ROUTES } from './../../routes/Routes';
 import ProfileCard from './../../components/profileCard/ProfileCard';
 import { useConnect } from '../../hooks/useConnect';
 import { isLastProfileCard } from '../../utils';
+import { UserDataType } from '../../services/type';
 
 const Swipe = ({ navigation }: { navigation: any }) => {
 
     const { nearByUsers, sendIgnoreRequest, sendConnectionRequest } = useConnect()
+
+    console.log('nearByUsers', nearByUsers)
 
     const [currentProfileData, setCurrentProfileData] = useState(SWIPE_STATICS.FOUND_USER_LIST[0])
 
@@ -42,18 +45,23 @@ const Swipe = ({ navigation }: { navigation: any }) => {
         })
     }, [navigation, currentProfileData])
 
+    const getUserProfile = (profileData: UserDataType) => (
+        <ProfileCard
+            key={profileData._id}
+            firstName={profileData?.firstName}
+            lastName={profileData?.lastName}
+            batch={profileData?.class}
+            designation={profileData?.designation}
+            organization={profileData?.organization}
+            course={profileData?.program}
+            college={profileData?.school}
+            navigation={navigation}
+        />
+    )
+
     const getProfileView = () => (
         <View style={styles.profileCardContainer}>
-            <ProfileCard
-                firstName={'shanu'}
-                lastName={'Agrawal'}
-                batch={2009}
-                designation={'software developer'}
-                organization={'Evive sofwatare analytics'}
-                course={'PGP'}
-                college={'ISB'}
-                navigation={navigation}
-            />
+            {nearByUsers.map(getUserProfile)}
         </View>
     )
 

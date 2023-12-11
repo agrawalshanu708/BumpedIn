@@ -22,8 +22,10 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
 
     const [isUserNotFoundContentSHown, setIsUserNotFoundContentSHown] = useState(false)
 
-    const location = { longitude: 11, latitude: 10 }
-
+    const location = {
+        user: '657755c339e7e327b0b84e78',
+        location: [37.4219783, -122.0840513]
+    }
     // useEffect(() => {
     //     console.log('ruunug function')
     //     getNearByUsers(location).then((res: any) => {
@@ -33,10 +35,17 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
     //     })
     // }, [navigation, getNearByUsers])
 
+
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             console.log('in useeffect', 'loadingstatus', loadingStatus)
-            getNearByUsers(location)
+            getNearByUsers(location).then((response: any) => {
+                console.log('response-location', response.data)
+                response.data.location.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserNotFoundContentSHown(true)
+            }).catch(((error) => {
+                console.log('error', error)
+            }))
         });
         return unsubscribe;
     }, [navigation, getNearByUsers]);
