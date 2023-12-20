@@ -42,7 +42,7 @@ const UserSearching = ({ navigation }: { navigation: any }) => {
             console.log('in useeffect', 'loadingstatus', loadingStatus)
             getNearByUsers(location).then((response: any) => {
                 console.log('response-location', response.data)
-                response.data.location.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserNotFoundContentSHown(true)
+                response.data.length > 0 ? navigation.navigate(ROUTES.SWIPE_USER.name) : setIsUserNotFoundContentSHown(true)
             }).catch(((error) => {
                 console.log('error', error)
             }))

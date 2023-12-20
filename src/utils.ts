@@ -14,7 +14,7 @@ const isLoading = (...args: LOADING_STATUS[]) =>
 const isLastProfileCard = (cardsArray, currentProfileData) => {
   const lastIndex = cardsArray.length - 1
   const currentIndex = cardsArray.findIndex(
-    data => data.id === currentProfileData.id,
+    data => data.user._id === currentProfileData.user._id,
   )
   const isLastCard = currentIndex === lastIndex
   return [isLastCard, currentIndex]
