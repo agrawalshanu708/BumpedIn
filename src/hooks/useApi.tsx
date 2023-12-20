@@ -3,7 +3,7 @@ import axios from "axios";
 import queryString from "query-string";
 import stringTemplate from "string-template";
 
-type ApiParamType = Record<string, string>
+type ApiParamType = Record<string, any>
 
 interface useApiType {
     apiGet: (url: string, pathParams?: ApiParamType, queryParams?: ApiParamType, body?: ApiParamType) => Promise<unknown>,
@@ -38,10 +38,12 @@ const UseApiProvider = ({ children }) => {
         }, [])
 
     const apiPost = useCallback(
-        (url: string,
+        (
+            url: string,
             pathparams: ApiParamType,
             queryParams: ApiParamType,
-            body: ApiParamType) => {
+            body: ApiParamType
+        ) => {
 
             const fullUrl = queryString.stringify({
                 url: stringTemplate(

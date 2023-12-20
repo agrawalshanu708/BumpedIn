@@ -1,9 +1,14 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
+import axios from "axios";
 
 import { API_URLS } from './../services/apiUrls';
 import { LOADING_STATUS } from '../enums';
 import { isLoadingOrCompletedOrFailed, isLoading } from '../utils';
-import { useApi } from "./useApi";
+import { useAuth } from "./useAuth";
+
+type Props = {
+    children: React.ReactNode,
+}
 
 interface useConnectType {
     getNearByUsers: () => Promise<any>,
@@ -25,11 +30,11 @@ const UseConnectContext = createContext<useConnectType>({
 
 const useConnect = () => useContext(UseConnectContext);
 
-const UseConnectProvider = ({ children }) => {
+const UseConnectProvider = ({ children }: Props) => {
 
-    const { apiGet, apiPost } = useApi()
+    const { userData } = useAuth();
 
-    const [nearByUsers, setNearByUsers] = useState({})
+    const [nearByUsers, setNearByUsers] = useState()
     const [totalUsers, setTotalUsers] = useState({})
     const [totalUsersLoadingStatus, setTotalUsersLoadingStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
     const [loadingStatus, setLoadingStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
@@ -37,71 +42,97 @@ const UseConnectProvider = ({ children }) => {
     const [ignoreConnectionLoadingStatus, setIgnoreConnectionLoadingStatus] = useState<LOADING_STATUS>(LOADING_STATUS.NOT_YET_STARTED)
 
     const getNearByUsers = useCallback(
-        (location) => new Promise((resolve, reject) => {
-            if (isLoadingOrCompletedOrFailed(loadingStatus)) {
+        (requestPayload: any) => new Promise(async (resolve, reject) => {
+            setLoadingStatus(LOADING_STATUS.NOT_YET_STARTED)
+            if (isLoading(loadingStatus)) {
+                console.log('in nearby user function-0', loadingStatus)
                 return;
             }
-            setTimeout(() => {
-                apiPost(API_URLS.CONNECT.GET_NEARBY_USERS, {}, {}, location).then((response: any) => {
-                    setNearByUsers(response?.data)
-                    setLoadingStatus(LOADING_STATUS.COMPLETED)
-                    resolve(response)
-                }).catch((e: any) => {
-                    console.error(
-                        'Error in fetching get nearby data', e
-                    )
-                    setLoadingStatus(LOADING_STATUS.FAILED)
-                    reject(e)
-                })
-            }, 1000)
-        }, [apiPost, loadingStatus, nearByUsers]))
+            console.log('in nearby user function-1', loadingStatus)
 
-    const getTotalUsers = useCallback(
-        () => {
-            if (isLoadingOrCompletedOrFailed(loadingStatus)) {
-                return;
-            }
-            apiGet(API_URLS.CONNECT.TOTAL_USERS).then((response: any) => {
-                setTotalUsers(response?.data)
-                setTotalUsersLoadingStatus(LOADING_STATUS.COMPLETED)
-            }).catch((e: any) => {
+            // setTimeout(() => {
+            try {
+                setLoadingStatus(LOADING_STATUS.LOADING)
+                // const response = await axios.post('https://bumpedin.app/api/locations', requestPayload)
+                // const nearByUsersResponse = await axios.get(`https://bumpedin.app/api/locations/nearby/${requestPayload.user}`)
+                const response = await axios.get('https://bumpedin.app/api/locations/nearby/6579e69e0b46ded001352aaa')
+                console.log('sdk', response.data)
+                setNearByUsers(response.data)
+                setLoadingStatus(LOADING_STATUS.COMPLETED)
+                resolve(response)
+            } catch (error) {
                 console.error(
                     'Error in fetching get nearby data', e
                 )
+                setLoadingStatus(LOADING_STATUS.FAILED)
+                reject(e)
+            }
+            // }, 1000);
+        }, [loadingStatus, nearByUsers]))
+
+    const getTotalUsers = useCallback(
+        async () => {
+            if (isLoading(totalUsersLoadingStatus)) {
+                return;
+            }
+
+            try {
+                setTotalUsersLoadingStatus(LOADING_STATUS.LOADING)
+                const response = await axios.get(API_URLS.CONNECT.TOTAL_USERS)
+                setTotalUsers(response?.data)
+                setTotalUsersLoadingStatus(LOADING_STATUS.COMPLETED)
+            } catch (error) {
+                console.error(
+                    'Error in fetching get nearby data', error
+                )
                 setTotalUsersLoadingStatus(LOADING_STATUS.FAILED)
-            })
-        }, [apiGet, totalUsersLoadingStatus, totalUsers])
+            }
+        }, [totalUsersLoadingStatus, totalUsers])
 
 
-    const sendConnectionRequest = useCallback((profileData: any) => new Promise((resolve, reject) => {
+    const sendConnectionRequest = useCallback((profileData: any) => new Promise(async (resolve, reject) => {
         if (isLoading(sendConnectionLoadingStatus)) {
             return;
         }
-        setSendConnectionLoadingStatus(LOADING_STATUS.LOADING)
-        apiPost(API_URLS.CONNECT.SEND_REQUEST, {}, {}, profileData).then((response: any) => {
+
+        try {
+            setSendConnectionLoadingStatus(LOADING_STATUS.LOADING)
+            const payload = {
+                sender: userData._id,
+                receiver: profileData.user._id,
+            }
+            const response = await axios.post('https://bumpedin.app/api/user-interactions/interact', payload)
             setSendConnectionLoadingStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
-        }).catch((error: any) => {
+        } catch (error) {
             setSendConnectionLoadingStatus(LOADING_STATUS.FAILED);
             reject(error)
             console.error('Error while updating the data', error);
-        })
-    }), [apiPost, sendConnectionLoadingStatus])
+        }
 
-    const sendIgnoreRequest = useCallback((profileData: any) => new Promise((resolve, reject) => {
+    }), [sendConnectionLoadingStatus])
+
+    const sendIgnoreRequest = useCallback((profileData: any) => new Promise(async (resolve, reject) => {
+        console.log('payload-clicked', profileData)
         if (isLoading(ignoreConnectionLoadingStatus)) {
             return;
         }
-        setIgnoreConnectionLoadingStatus(LOADING_STATUS.LOADING);
-        apiPost(API_URLS.CONNECT.IGNORE_CONNECT, {}, {}, profileData).then((response: any) => {
+        try {
+            setIgnoreConnectionLoadingStatus(LOADING_STATUS.LOADING);
+            const payload = {
+                sender: '65806cc4f173d134378f35b4',
+                receiver: profileData.user._id,
+            }
+            console.log('payload', payload)
+            const response = await axios.post('https://bumpedin.app/api/user-interactions/ignore', payload)
             setIgnoreConnectionLoadingStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
-        }).catch((error: any) => {
+        } catch (error) {
             setIgnoreConnectionLoadingStatus(LOADING_STATUS.FAILED);
             reject(error)
             console.error('Error while updating the data', error);
-        })
-    }), [apiPost, sendConnectionLoadingStatus])
+        }
+    }), [ignoreConnectionLoadingStatus])
 
     const contextValue = useMemo(() => ({
         getNearByUsers,
@@ -110,6 +141,7 @@ const UseConnectProvider = ({ children }) => {
         sendIgnoreRequest,
         nearByUsers,
         totalUsers,
+        loadingStatus,
     }), [
         getNearByUsers,
         getTotalUsers,
@@ -117,12 +149,12 @@ const UseConnectProvider = ({ children }) => {
         sendIgnoreRequest,
         nearByUsers,
         totalUsers,
+        loadingStatus,
     ])
-
     return (
-        <UseConnectProvider value={contextValue}>
+        <UseConnectContext.Provider value={contextValue}>
             {children}
-        </UseConnectProvider>
+        </UseConnectContext.Provider>
     )
 }
 

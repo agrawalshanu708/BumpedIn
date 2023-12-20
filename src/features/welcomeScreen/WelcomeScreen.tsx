@@ -1,67 +1,50 @@
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, User, statusCodes } from '@react-native-google-signin/google-signin';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import axios from 'axios';
-
 import { Button, Heading, Text } from 'native-base';
+
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
 import { ROUTES } from './../../routes/Routes';
 import { API_URLS } from '../../services/apiUrls';
 import { useApi } from '../../hooks/useApi';
 import { SIZE } from '../../enums';
+import { useAuth } from '../../hooks/useAuth';
 
 const WelcomeScreen = ({ navigation }: { navigation: any }) => {
-    const api = axios.create({})
 
-    const { apiGet, apiPost } = useApi()
-
-    const [userData, setUserData] = useState<any>()
-    const webClientId = `813451232123-lf4oce7kc1ttcvvovm4cs78jpqtfao6l.apps.googleusercontent.com`
+    const { userData, handleGoogleSignin, signInStatus } = useAuth()
 
     useEffect(() => {
         GoogleSignin.configure()
     }, [])
 
-    const handleGoogleSignin = async () => {
-        console.log('google sigin start')
-        try {
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            const checkingUserIsValid = await api.post(API_URLS.PROFESSIONAL_DATA.VERIFY_MAIL, userInfo)
-            await navigation.navigate(ROUTES.PROFILE_VIEW.name)
-            console.log("userinfo", userInfo);
-        } catch (error: any) {
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                console.log(error)
-                navigation.navigate(ROUTES.LOGIN_ERROR.name)
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                console.log(error)
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                console.log(error)
-                navigation.navigate(ROUTES.LOGIN_ERROR.name)
-            } else {
-            }
-        }
-    };
-
     const onPressHandler = useCallback(() => {
-        // handleGoogleSignin()
-        navigation.navigate(ROUTES.FORM.name)
-    }, [])
+        console.log('signInStatus', signInStatus)
+        handleGoogleSignin().then(() => {
+            console.log('success', userData)
+            navigation.navigate(ROUTES.FORM.name)
+        }).catch((error) => {
+            console.log('error---', error)
+            navigation.navigate(ROUTES.LOGIN_ERROR.name)
+        })
+    }, [navigation])
 
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
-            <Heading style={styles.heading} size={SIZE.XL}>{WELCOME_SCREEN_STATICS.HEADER.heading}</Heading>
-            <Text color={'gray.600'} style={styles.subHeading}>{WELCOME_SCREEN_STATICS.HEADER.subHeading}</Text>
+            <Heading fontWeight={600} style={styles.heading} size={SIZE.LG}>{WELCOME_SCREEN_STATICS.HEADER.heading}</Heading>
+            <Text fontSize={SIZE.MD} color={'gray.600'} style={styles.subHeading}>{WELCOME_SCREEN_STATICS.HEADER.subHeading}</Text>
         </View>
     );
 
     const getSignInText = () => (
-        <Text color={'gray.900'} style={styles.disclaimer}>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_1}<Text bold>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_2}</Text><Text>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_3}</Text></Text>
+        <Text fontSize={SIZE.MD} color={'gray.900'} style={styles.disclaimer}>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_1}<Text bold>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_2}</Text><Text>{WELCOME_SCREEN_STATICS.SIGNIN_TEXT_3}</Text></Text>
     );
 
     const getActionView = () => (
-        <Button onPress={onPressHandler} style={styles.ContinueCta}>{WELCOME_SCREEN_STATICS.CTA.name}</Button>
+        <View style={styles.actionContainer}>
+            <Button size={SIZE.SM} onPress={onPressHandler} style={styles.ContinueCta}><Text fontWeight={600} fontSize={15} color={'white'}>{WELCOME_SCREEN_STATICS.CTA.name}</Text></Button>
+        </View>
     );
 
     return (
@@ -82,6 +65,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 36,
         paddingVertical: 36,
+        backgroundColor: 'white'
     },
 
     headerContainer: {
@@ -89,6 +73,7 @@ const styles = StyleSheet.create({
 
     heading: {
         textAlign: 'center',
+        fontFamily: "Assistant-Regular",
     },
 
     subHeading: {
@@ -97,12 +82,15 @@ const styles = StyleSheet.create({
     },
 
     disclaimer: {
-        marginTop: 96,
+        marginTop: 110,
         textAlign: 'center',
     },
-
+    actionContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     ContinueCta: {
-        marginTop: 6,
+        marginTop: 12,
     },
 });
 

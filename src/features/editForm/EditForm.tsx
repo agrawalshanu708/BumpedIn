@@ -1,19 +1,19 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { useUserProfessionalData } from '../../hooks/useUserProfessionalData'
+import { useUserData } from '../../hooks/useUserData'
 import Form1 from '../../components/form/Form'
 
 
 const EditForm = ({ navigation }: { navigation: any }) => {
 
-    const { formData } = useUserProfessionalData()
+    const { formData } = useUserData()
 
     return (
         <View style={styles.container}>
             <Form1
-                designation={formData.designation}
-                organization={formData.organization}
+                designation={formData?.designation}
+                organization={formData?.organization}
                 navigation={navigation}
                 editMode={true}
             />

@@ -1,6 +1,6 @@
 export const FORM_STATICS = {
   HEADER: {
-    heading: 'Welcome,  Rishit!',
+    heading: 'Welcome, {name}!',
   },
   FORM: {
     heading: 'Just one more step:',
@@ -11,4 +11,4 @@ export const FORM_STATICS = {
       name: 'Skip',
     },
   },
-};
+}
