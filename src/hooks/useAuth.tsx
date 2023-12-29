@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import axios from 'axios';
+import auth from '@react-native-firebase/auth';
 
 import { API_URLS } from '../services/apiUrls';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
@@ -49,6 +50,10 @@ const UseAuthProvider = ({ children }: Props) => {
     const [userData, setUserData] = useState<UserDataType>({})
     const [signInStatus, setSignInStatus] = useState(LOADING_STATUS.NOT_YET_STARTED)
 
+    GoogleSignin.configure({
+        webClientId: '722180858444-tcq97im3otnhojufqhffvjh5j6lplq84.apps.googleusercontent.com',
+    });
+
     const handleGoogleSignin = useCallback(() => new Promise(async (
         resolve, reject
     ) => {
@@ -58,11 +63,15 @@ const UseAuthProvider = ({ children }: Props) => {
         }
         try {
             setSignInStatus(LOADING_STATUS.LOADING)
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log('userinfo', userInfo);
-            const requestPayload = await generateSignInPayload(userInfo);
-            console.log('requestPayload', requestPayload);
+            // Check if your device supports Google Play
+            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+            // Get the users ID and user token
+            const { idToken, user } = await GoogleSignin.signIn();
+            // Create a Google credential with the token
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            // Sign-in the user with the credential
+            auth().signInWithCredential(googleCredential);
+            const requestPayload = await generateSignInPayload(user);
             const response = await axios.post(
                 API_URLS.AUTH.VERIFY_MAIL,
                 requestPayload,

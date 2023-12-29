@@ -39,8 +39,7 @@ function getUserContentFromEmail(email: string) {
   return []
 }
 
-const generateSignInPayload = async (userInfo: any) => {
-  const {user} = userInfo
+const generateSignInPayload = async (user: any) => {
   const data = getUserContentFromEmail(user?.email)
 
   const batchYear = data[2]

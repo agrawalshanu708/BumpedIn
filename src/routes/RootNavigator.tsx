@@ -15,10 +15,10 @@ const RootNavigator = () => (
         screenOptions={{
             headerShown: false,
         }}>
-        {/* <Stack.Screen
+        <Stack.Screen
             name={ROUTES.WELCOME.name}
             component={WelcomeScreen}>
-        </Stack.Screen> */}
+        </Stack.Screen>
         <Stack.Screen name={ROUTES.LOGIN_ERROR.name} component={LoginError}></Stack.Screen>
         <Stack.Screen name={ROUTES.FORM.name} component={Form}></Stack.Screen>
         <Stack.Screen name={ROUTES.PROFILE_VIEW.name} component={ProfileInfo}></Stack.Screen>
