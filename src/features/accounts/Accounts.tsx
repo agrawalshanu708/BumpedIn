@@ -6,14 +6,20 @@ import { ACCOUNT_STATICS } from './AccountStatics'
 import ProfileCard from '../../components/profileCard/ProfileCard';
 import { useAuth } from '../../hooks/useAuth';
 import { useUserData } from '../../hooks/useUserData';
+import { isLoading } from '../../utils';
+import { ROUTES } from '../../routes/Routes';
 
 const Accounts = ({ navigation }: { navigation: any }) => {
 
-    const { userData } = useAuth()
+    const { userData, signout, signOutStatus } = useAuth()
     const { formData } = useUserData()
 
     const handlePress = useCallback(() => {
-        //signout
+        signout().then(() => {
+            navigation.navigate(ROUTES.WELCOME.name)
+        }).catch((error) => {
+            console.log('Failed to sign out', error)
+        })
     }, [])
 
     const getProfileCard = () => (
@@ -35,7 +41,7 @@ const Accounts = ({ navigation }: { navigation: any }) => {
     const getContentView = () => (
         <View style={styles.contentContainer}>
             <Text style={styles.contentText}>{ACCOUNT_STATICS.ALUMS_TEXT}</Text>
-            <Button onPress={handlePress} style={styles.signoutCta}>{ACCOUNT_STATICS.CTA.name}</Button>
+            <Button isLoading={isLoading(signOutStatus)} onPress={handlePress} style={styles.signoutCta}>{ACCOUNT_STATICS.CTA.name}</Button>
         </View>
     )
 

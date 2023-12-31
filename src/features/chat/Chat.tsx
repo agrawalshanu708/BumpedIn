@@ -1,54 +1,73 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import { Button, Card, Heading, Text, Input } from 'native-base'
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Card, Heading, Input, Text } from 'native-base'
 import { SIZE } from '../../enums'
+import { useAuth } from '../../hooks/useAuth'
+import { firebase } from '@react-native-firebase/database'
 
-
-const MESSAGE_HISTORY = [{
-    sender: 'FIRST_USER',
-    message: 'hello',
-    name: 'SA'
-}, {
-    sender: 'SECOND_USER',
-    message: 'hello sir, How can i help you',
-    name: 'RJ'
-}, {
-    sender: 'SECOND_USER',
-    message: 'hello sir, How can i help you',
-    name: 'RJ'
-}, {
-    sender: 'SECOND_USER',
-    message: 'hello sir, How can i help you',
-    name: 'RJ'
-}, {
-    sender: 'FIRST_USER',
-    message: 'hello',
-    name: 'SA'
-}]
-
-enum MESSAGE_SENDER_TYPE {
-    FIRST_USER = 'FIRST_USER',
-    SECOND_USER = 'SECOND_USER',
+type MESSAGE_DATA_TYPE = {
+    roomId?: string,
+    from?: string,
+    to?: string,
+    message?: string,
 }
 
-const Chat = () => {
-    const [messageInput, setMessageInput] = useState('')
-    const [messageHistory, setMessageHistory] = useState(MESSAGE_HISTORY)
+const Chat = ({ navigation, route }) => {
+    const { params: selectedUserData } = route
+    const { userData } = useAuth();
 
-    const onMessageInputChange = useCallback((e: any) => {
-        setMessageInput(e.target.value)
-    }, [messageInput])
+    const [messageInput, setMessageInput] = useState('')
+    const [messageHistory, setMessageHistory] = useState<MESSAGE_DATA_TYPE[]>([])
+
+    useEffect(() => {
+        const onChildAdd = firebase
+            .app()
+            .database('https://bumpedin-8bcea-default-rtdb.asia-southeast1.firebasedatabase.app/')
+            .ref(`/messaging/${selectedUserData.roomId}`)
+            .on('child_added', snapshot => {
+                console.log('A new node has been added', snapshot.val());
+                setMessageHistory((prevState) => [...prevState, snapshot.val()])
+            });
+
+        // Stop listening for updates when no longer required
+        return () => firebase
+            .app()
+            .database('https://bumpedin-8bcea-default-rtdb.asia-southeast1.firebasedatabase.app/')
+            .ref(`/messaging/${selectedUserData.roomId}`)
+            .off('child_added', onChildAdd);
+    }, []);
+
+    const onMessageInputChange = (value) => {
+        setMessageInput(value)
+    }
 
     const handleSendMessage = useCallback((e: any) => {
-        setMessageHistory((prevMessageContent) => ([...prevMessageContent, {
-            sender: 'FIRST_USER',
+        let messageData = {
+            roomId: selectedUserData.roomId,
             message: messageInput,
-            name: 'SA',
-        }]))
-    }, [messageInput, messageHistory])
+            from: userData?._id,
+            to: selectedUserData._id,
+        }
+
+        const newReference = firebase
+            .app()
+            .database('https://bumpedin-8bcea-default-rtdb.asia-southeast1.firebasedatabase.app/')
+            .ref(`/messaging/${selectedUserData.roomId}`)
+            .push();
+
+        console.log('Auto generated key: ', newReference.key);
+        messageData.id = newReference.key
+
+        newReference
+            .set(messageData)
+            .then(() => {
+                setMessageInput('')
+            });
+
+    }, [messageInput])
 
     const getSenderName = (messageData: any) => (
-        <Card backgroundColor={messageData.sender === MESSAGE_SENDER_TYPE.FIRST_USER ? 'primary.900' : 'gray.500'} style={styles.senderNameContainer}>
+        <Card backgroundColor={messageData.from === userData._id ? 'primary.900' : 'gray.500'} style={styles.senderNameContainer}>
             <Text color={'white'}>{messageData.name}</Text>
         </Card>
     )
@@ -73,22 +92,18 @@ const Chat = () => {
         </View>
     )
 
-    const getMessageView = (messageData: any) => {
-        switch (messageData.sender) {
-            case MESSAGE_SENDER_TYPE.FIRST_USER:
-                return getFirstUserMessageView(messageData)
-            case MESSAGE_SENDER_TYPE.SECOND_USER:
-                return getSecondUserMessageView(messageData)
-                break;
-            default:
-                break;
+    const getMessageView = (messageData: MESSAGE_DATA_TYPE) => {
+        if (messageData.from === userData._id) {
+            return getFirstUserMessageView(messageData)
+        } else {
+            return getSecondUserMessageView(messageData)
         }
     }
 
     const getHeaderView = () => (
         <View style={styles.headerContainer}>
             <View style={styles.headerContent}>
-                <Heading fontWeight={600} size={SIZE.LG} style={styles.senderName}>Nirav Rawell</Heading>
+                <Heading fontWeight={600} size={SIZE.LG} style={styles.senderName}>{selectedUserData.firstName} {selectedUserData.lastName}</Heading>
             </View>
             <Card padding={2} backgroundColor={'gray.400'} style={styles.headerDisclaimer}>This Chat will end and deleted in 12 hours</Card>
         </View>
@@ -102,9 +117,11 @@ const Chat = () => {
 
     const getFooterView = () => (
         <View style={styles.footerContainer}>
-            <Input value={messageInput} onChange={onMessageInputChange} style={styles.textInput} InputRightElement={<Button backgroundColor={'primary.900'} onPress={handleSendMessage} size="xs" w="1/6">send</Button>} />
+            <Input value={messageInput} onChangeText={onMessageInputChange} style={styles.textInput} InputRightElement={<Button backgroundColor={'primary.900'} onPress={handleSendMessage} size="xs" w="1/6">send</Button>}
+            />
         </View>
     )
+
 
     return (
         <View style={styles.container}>

@@ -12,11 +12,18 @@ const isLoading = (...args: LOADING_STATUS[]) =>
   args.some((state: LOADING_STATUS) => state === LOADING_STATUS.LOADING)
 
 const isLastProfileCard = (cardsArray, currentProfileData) => {
+  console.log(
+    'currentProfileData',
+    currentProfileData,
+    'cardsArray',
+    cardsArray,
+  )
   const lastIndex = cardsArray.length - 1
   const currentIndex = cardsArray.findIndex(
-    data => data.user._id === currentProfileData.user._id,
+    data => data?.user?._id === currentProfileData?.user?._id,
   )
   const isLastCard = currentIndex === lastIndex
+  console.log('isLastCard', isLastCard, 'currentIndex', currentIndex)
   return [isLastCard, currentIndex]
 }
 

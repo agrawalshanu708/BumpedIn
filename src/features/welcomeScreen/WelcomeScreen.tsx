@@ -2,6 +2,9 @@ import { GoogleSignin, User, statusCodes } from '@react-native-google-signin/goo
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { firebase } from '@react-native-firebase/database';
+
 import { Button, Heading, Text } from 'native-base';
 
 import { WELCOME_SCREEN_STATICS } from './WelcomeScreenStatics';
@@ -10,17 +13,30 @@ import { API_URLS } from '../../services/apiUrls';
 import { useApi } from '../../hooks/useApi';
 import { SIZE } from '../../enums';
 import { useAuth } from '../../hooks/useAuth';
+import { clearLocal, getValueFromLocal } from '../../storageUtils';
 
 const WelcomeScreen = ({ navigation }: { navigation: any }) => {
 
     const { userData, handleGoogleSignin, signInStatus } = useAuth()
 
     useEffect(() => {
-        GoogleSignin.configure()
+        GoogleSignin.configure({
+            webClientId: '722180858444-tcq97im3otnhojufqhffvjh5j6lplq84.apps.googleusercontent.com',
+        })
+    }, [])
+
+    useEffect(() => {
+        console.log('response-useefect',)
+        getValueFromLocal('account').then((response) => {
+            console.log('response', response)
+            if (response) {
+                navigation.navigate(ROUTES.PROFILE_VIEW.name)
+            }
+        })
+        // clearLocal()
     }, [])
 
     const onPressHandler = useCallback(() => {
-        console.log('signInStatus', signInStatus)
         handleGoogleSignin().then(() => {
             console.log('success', userData)
             navigation.navigate(ROUTES.FORM.name)

@@ -1,7 +1,11 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { firebase } from '@react-native-firebase/database';
 
+import { getValueFromLocal, removeFromLocal, setValueToLocal } from '../storageUtils'
 import { API_URLS } from '../services/apiUrls';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { generateSignInPayload, isLoading } from '../utils';
@@ -11,8 +15,7 @@ import { useApi } from './useApi';
 type Props = {
     children: React.ReactNode,
 }
-
-type UserDataType = {
+export type UserDataType = {
     _id: string,
     school: string,
     email: string,
@@ -27,6 +30,8 @@ interface useAuthType {
     userData: UserDataType,
     handleGoogleSignin: () => Promise<any>,
     signInStatus: LOADING_STATUS,
+    signout: () => Promise<any>,
+    signOutStatus: LOADING_STATUS,
 }
 
 const UseAuthContext = createContext<useAuthType>({
@@ -41,7 +46,9 @@ const UseAuthContext = createContext<useAuthType>({
         cohort: '',
     },
     handleGoogleSignin: () => Promise.resolve({}),
-    signInStatus: LOADING_STATUS.NOT_YET_STARTED
+    signInStatus: LOADING_STATUS.NOT_YET_STARTED,
+    signout: () => Promise.resolve({}),
+    signOutStatus: LOADING_STATUS.NOT_YET_STARTED,
 });
 
 const useAuth = () => useContext(UseAuthContext);
@@ -49,15 +56,28 @@ const useAuth = () => useContext(UseAuthContext);
 const UseAuthProvider = ({ children }: Props) => {
     const [userData, setUserData] = useState<UserDataType>({})
     const [signInStatus, setSignInStatus] = useState(LOADING_STATUS.NOT_YET_STARTED)
+    const [signOutStatus, setSignOutStatus] = useState(LOADING_STATUS.NOT_YET_STARTED)
 
-    GoogleSignin.configure({
-        webClientId: '722180858444-tcq97im3otnhojufqhffvjh5j6lplq84.apps.googleusercontent.com',
-    });
+    // GoogleSignin.configure({
+    // });
+
+    const registerUser = async (id: any, userData: any) => {
+        console.log('Registering')
+        firebase
+            .app()
+            .database('https://bumpedin-8bcea-default-rtdb.asia-southeast1.firebasedatabase.app/')
+            .ref('/users/' + id)
+            .set(userData)
+            .then(() => {
+                console.log('successfully registered')
+            }).catch((e) => {
+                console.error('Failed to register', e)
+            });
+    };
 
     const handleGoogleSignin = useCallback(() => new Promise(async (
         resolve, reject
     ) => {
-        console.log('function calling', signInStatus)
         if (isLoading(signInStatus)) {
             return;
         }
@@ -76,6 +96,9 @@ const UseAuthProvider = ({ children }: Props) => {
                 API_URLS.AUTH.VERIFY_MAIL,
                 requestPayload,
             );
+            console.log('uswerr', response.data.user._id, userData)
+            setValueToLocal('account', response.data.user._id)
+            registerUser(response.data.user._id, { ...requestPayload, _id: response.data.user._id })
             setUserData({ ...requestPayload, _id: response.data.user._id })
             setSignInStatus(LOADING_STATUS.COMPLETED)
             resolve(response)
@@ -94,15 +117,41 @@ const UseAuthProvider = ({ children }: Props) => {
         }
     }), [signInStatus, userData])
 
+    const signout = useCallback(() => new Promise(async (
+        resolve, reject
+    ) => {
+        console.log('signOutStatus', signOutStatus)
+        if (isLoading(signOutStatus)) {
+            console.log('in loadinf check')
+            return;
+        }
+        try {
+            console.log('in tryyy', userData)
+            setSignOutStatus(LOADING_STATUS.LOADING)
+            await GoogleSignin.signOut();
+            const response = await axios.delete(`https://bumpedin.app/api/users/${userData._id}`);
+            removeFromLocal('account')
+            setSignOutStatus(LOADING_STATUS.COMPLETED)
+            resolve('response')
+        } catch (error) {
+            setSignOutStatus(LOADING_STATUS.FAILED)
+            reject(error)
+        }
+    }), [signOutStatus, userData])
+
     const contextValue = useMemo(() => ({
         userData,
         handleGoogleSignin,
         signInStatus,
+        signout,
+        signOutStatus,
     }),
         [
             userData,
             handleGoogleSignin,
-            signInStatus
+            signInStatus,
+            signout,
+            signOutStatus,
         ])
 
     return (
